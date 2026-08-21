@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>옥 게임 월드! 5 in 1</title>
   <meta property="og:title" content="옥 게임 월드! 5종 종합 파티 🎰🃏" />
-  <meta property="og:description" content="옥 잡기, 피하기, 플래피, 슬롯머신, 그리고 바카라까지!" />
+  <meta property="og:description" content="옥 잡기, 피하기, 플래피, 슬롯머신, 그리고 블록버스터 바카라까지!" />
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
     body { margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; background: #0a0200; color: #ffffff; overflow: hidden; }
@@ -54,23 +54,47 @@
     .bet-btn { background: #ffd700; color: #402300; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; font-weight: 900; }
     #spinBtn { width: 100%; border: none; border-radius: 999px; padding: 13px; font-size: 18px; font-weight: 1000; background: #ff4d4d; color: #fff; }
 
-    /* 5. Baccarat */
-    #baccaratGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; background: radial-gradient(circle at 50% 30%, #064024, #021a0e 85%); border: 3px solid #d4af37; border-radius: 12px; }
-    .bac-header { text-align: center; }
-    .bac-header h2 { margin: 0; color: #ffd700; font-size: 20px; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
-    .bac-table { display: flex; justify-content: space-between; gap: 8px; margin: 10px 0; }
-    .bac-side { flex: 1; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 8px; text-align: center; }
+    /* 5. Blockbuster Baccarat */
+    #baccaratGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 12px 14px; background: radial-gradient(circle at 50% 30%, #064024, #021a0e 85%); border: 3px solid #d4af37; border-radius: 12px; }
+    
+    /* 딜러 구역 */
+    .dealer-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(0,0,0,0.5); border-radius: 12px; padding: 6px 10px; border: 1px solid rgba(255,215,0,0.3); }
+    .dealer-avatar { width: 50px; height: 50px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid #ffd700; flex-shrink: 0; transition: transform .3s; }
+    .dealer-speech { background: #fff; color: #111; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; position: relative; max-width: 250px; text-align: left; box-shadow: 0 3px 8px rgba(0,0,0,0.5); }
+    .dealer-speech::after { content:''; position: absolute; left: -6px; top: 16px; border-width: 6px 6px 6px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
+
+    /* 배틀 테이블 */
+    .bac-table { display: flex; justify-content: space-between; gap: 8px; margin: 4px 0; }
+    .bac-side { flex: 1; background: rgba(0,0,0,0.45); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 6px 4px; text-align: center; display: flex; flex-direction: column; align-items: center; position: relative; transition: border-color .3s, box-shadow .3s; }
     .bac-side.player { border-color: #3b82f6; }
     .bac-side.banker { border-color: #ef4444; }
-    .bac-side-title { font-size: 13px; font-weight: 900; margin-bottom: 6px; }
-    .bac-cards { display: flex; justify-content: center; gap: 4px; min-height: 70px; }
-    .card { width: 44px; height: 64px; background: #fff; color: #000; border-radius: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+    
+    .bac-avatar { width: 52px; height: 52px; border-radius: 50%; background-size: cover; background-position: center; margin-bottom: 4px; border: 3px solid #666; transition: transform .3s, border-color .3s, box-shadow .3s; }
+    .avatar-ok { background-image: url('./ok_photo.png.jpg'); }
+    .avatar-bad { background-image: url('./bad_photo.png.jpg'); }
+    
+    /* 점수별 후광/절망 상태 */
+    .glowing { border-color: #ffd700 !important; box-shadow: 0 0 16px #ffd700 !important; transform: scale(1.1) !important; }
+    .despair { filter: grayscale(100%) brightness(0.6); transform: scale(0.95); }
+
+    .bac-side-title { font-size: 12px; font-weight: 900; margin-bottom: 4px; }
+    .bac-cards { display: flex; justify-content: center; gap: 4px; min-height: 60px; }
+    .card { width: 38px; height: 56px; background: #fff; color: #000; border-radius: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: 900; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.4); animation: cardPop .25s ease-out; }
+    @keyframes cardPop { from { transform: scale(0.3) rotate(-15deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
     .card.red { color: #d00; }
-    .bac-score { font-size: 18px; font-weight: 900; margin-top: 6px; }
-    .bet-boxes { display: flex; gap: 6px; margin-bottom: 8px; }
-    .bet-box { flex: 1; padding: 10px 4px; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.5); text-align: center; cursor: pointer; }
+    .bac-score { font-size: 17px; font-weight: 900; margin-top: 3px; }
+
+    /* 3번째 카드 드래곤 컷인 */
+    #cutInOverlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 120; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    #cutInOverlay.active { opacity: 1; }
+    .cutin-face { width: 140px; height: 140px; border-radius: 50%; background-size: cover; background-position: center; border: 5px solid #ffd700; box-shadow: 0 0 35px #ffd700; transform: scale(0.2); transition: transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
+    #cutInOverlay.active .cutin-face { transform: scale(1.1); }
+    .cutin-text { margin-top: 14px; font-size: 22px; font-weight: 1000; text-shadow: 0 0 10px #ff0000; letter-spacing: 1px; }
+
+    .bet-boxes { display: flex; gap: 6px; margin-bottom: 6px; }
+    .bet-box { flex: 1; padding: 8px 4px; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.5); text-align: center; cursor: pointer; }
     .bet-box.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); transform: scale(1.02); }
-    .bet-box h3 { margin: 0; font-size: 13px; }
+    .bet-box h3 { margin: 0; font-size: 12px; }
     .bet-box span { font-size: 11px; opacity: 0.8; }
   </style>
 </head>
@@ -161,43 +185,56 @@
     </div>
   </div>
 
-  <!-- 게임 5: Baccarat -->
+  <!-- 게임 5: Blockbuster Baccarat -->
   <div id="baccaratGameArea" class="hidden">
-    <div class="bac-header">
-      <h2>🃏 OK BACCARAT 🃏</h2>
-      <div style="font-size:12px;color:#a7f3d0;margin-top:2px;">보유 칩: <b id="bacChips" style="color:#ffd700;font-size:16px;">1,000</b></div>
+    
+    <!-- 딜러 구역 (친구 딜러 & 약올리는 말풍선) -->
+    <div class="dealer-wrap">
+      <div class="dealer-avatar avatar-ok" id="dealerAvatar"></div>
+      <div class="dealer-speech" id="dealerSpeech">어디에 걸어볼 텐가? 옥의 직감을 믿어봐 👌</div>
+    </div>
+
+    <!-- 3번째 카드 드래곤 컷인 연출 레이어 -->
+    <div id="cutInOverlay">
+      <div class="cutin-face avatar-ok" id="cutInFace"></div>
+      <div class="cutin-text" id="cutInText" style="color:#ffd700;">🔥 오케이의 가호! 3번째 카드! 🔥</div>
     </div>
 
     <div class="bac-table">
-      <!-- Player: 오케이 -->
-      <div class="bac-side player">
-        <div class="bac-side-title" style="color:#60a5fa;">👌 오케이 (PLAYER)</div>
+      <!-- Player: 오케이 진영 -->
+      <div class="bac-side player" id="sidePlayer">
+        <div class="bac-avatar avatar-ok" id="pAvatar"></div>
+        <div class="bac-side-title" style="color:#60a5fa;">👌 PLAYER</div>
         <div class="bac-cards" id="playerCards"></div>
         <div class="bac-score" style="color:#93c5fd;" id="playerScore">-</div>
       </div>
-      <!-- Banker: 안옼케이 -->
-      <div class="bac-side banker">
-        <div class="bac-side-title" style="color:#f87171;">❌ 안옼케이 (BANKER)</div>
+      <!-- Banker: 안옼케이 진영 -->
+      <div class="bac-side banker" id="sideBanker">
+        <div class="bac-avatar avatar-bad" id="bAvatar"></div>
+        <div class="bac-side-title" style="color:#f87171;">❌ BANKER</div>
         <div class="bac-cards" id="bankerCards"></div>
         <div class="bac-score" style="color:#fca5a5;" id="bankerScore">-</div>
       </div>
     </div>
 
-    <div id="bacResultMsg" style="text-align:center;font-weight:bold;font-size:14px;color:#fff86b;min-height:22px;">베팅 구역을 선택하고 DEAL을 누르세요!</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px;">
+      <span style="font-size:12px;color:#a7f3d0;">보유 칩: <b id="bacChips" style="color:#ffd700;font-size:16px;">1,000</b></span>
+      <span id="bacResultMsg" style="font-weight:bold;font-size:12px;color:#fff86b;">베팅 후 DEAL을 터치하세요!</span>
+    </div>
 
     <!-- 베팅 영역 -->
     <div>
       <div class="bet-boxes">
         <div class="bet-box selected" id="betPlayer" onclick="selectBacBet('PLAYER')">
-          <h3 style="color:#60a5fa;">PLAYER</h3>
+          <h3 style="color:#60a5fa;">👌 PLAYER</h3>
           <span>2.0배</span>
         </div>
         <div class="bet-box" id="betTie" onclick="selectBacBet('TIE')">
-          <h3 style="color:#4ade80;">TIE (무)</h3>
+          <h3 style="color:#4ade80;">🤝 TIE</h3>
           <span>8.0배</span>
         </div>
         <div class="bet-box" id="betBanker" onclick="selectBacBet('BANKER')">
-          <h3 style="color:#f87171;">BANKER</h3>
+          <h3 style="color:#f87171;">❌ BANKER</h3>
           <span>1.95배</span>
         </div>
       </div>
@@ -208,8 +245,8 @@
         <button class="bet-btn" onclick="changeBacBet(50)">+</button>
       </div>
 
-      <button id="dealBtn" class="menu-btn btn-green" style="margin-bottom:4px;padding:12px;font-size:17px;" onclick="dealBaccarat()">🃏 DEAL (카드 열기)</button>
-      <button class="menu-btn btn-back" style="width:100%;margin-top:2px;padding:8px;" onclick="goToMenu()">메뉴로 가기</button>
+      <button id="dealBtn" class="menu-btn btn-green" style="margin-bottom:4px;padding:12px;font-size:16px;" onclick="dealBaccarat()">🃏 DEAL (승부 보기)</button>
+      <button class="menu-btn btn-back" style="width:100%;margin-top:2px;padding:7px;" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
 
@@ -239,14 +276,19 @@
         osc.frequency.setValueAtTime(350, now); osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
         gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         osc.start(now); osc.stop(now + 0.1);
+      } else if (type === 'cutin') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(600, now + 0.3);
+        gain.gain.setValueAtTime(0.35, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
       } else if (type === 'win') {
-        osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.2);
-        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-        osc.start(now); osc.stop(now + 0.2);
+        osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now); osc.stop(now + 0.25);
       } else if (type === 'lose') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(50, now + 0.2);
-        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-        osc.start(now); osc.stop(now + 0.2);
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(50, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now); osc.stop(now + 0.25);
       }
     } catch(e) {}
   }
@@ -482,7 +524,7 @@
     }, 2600);
   }
 
-  /* 5. Baccarat */
+  /* 5. Blockbuster Baccarat */
   let bacCredits = 1000, bacBet = 100, selectedBet = 'PLAYER', bacDealing = false;
   const SUITS = ['♠', '♥', '♦', '♣'];
   const VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -491,10 +533,23 @@
     hideAll(); baccaratGameArea.classList.remove("hidden");
     document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
     document.getElementById('bacBetVal').innerText = bacBet;
+    resetBacBoard();
+    setDealer('ok', "어디에 걸어볼 텐가? 옥의 직감을 믿어봐 👌");
+  }
+
+  function resetBacBoard() {
     document.getElementById('playerCards').innerHTML = '';
     document.getElementById('bankerCards').innerHTML = '';
     document.getElementById('playerScore').innerText = '-';
     document.getElementById('bankerScore').innerText = '-';
+    document.getElementById('pAvatar').className = 'bac-avatar avatar-ok';
+    document.getElementById('bAvatar').className = 'bac-avatar avatar-bad';
+  }
+
+  function setDealer(type, text) {
+    const avatar = document.getElementById('dealerAvatar');
+    avatar.className = `dealer-avatar ${type === 'ok' ? 'avatar-ok' : 'avatar-bad'}`;
+    document.getElementById('dealerSpeech').innerText = text;
   }
 
   function selectBacBet(type) {
@@ -524,13 +579,55 @@
     return div;
   }
 
+  function updateAvatarReactions(pScore, bScore) {
+    const pAvatar = document.getElementById('pAvatar');
+    const bAvatar = document.getElementById('bAvatar');
+
+    // 플레이어(오케이) 실시간 표정 & 후광 반응
+    if (pScore >= 7) {
+      pAvatar.className = 'bac-avatar avatar-ok glowing';
+    } else if (pScore <= 3) {
+      pAvatar.className = 'bac-avatar avatar-bad despair';
+    } else {
+      pAvatar.className = 'bac-avatar avatar-ok';
+    }
+
+    // 뱅커(안옼케이) 실시간 표정 & 후광 반응
+    if (bScore >= 7) {
+      bAvatar.className = 'bac-avatar avatar-bad glowing';
+    } else if (bScore <= 3) {
+      bAvatar.className = 'bac-avatar avatar-ok despair';
+    } else {
+      bAvatar.className = 'bac-avatar avatar-bad';
+    }
+  }
+
+  function showCutIn(type, title, callback) {
+    const overlay = document.getElementById('cutInOverlay');
+    const face = document.getElementById('cutInFace');
+    const text = document.getElementById('cutInText');
+
+    face.className = `cutin-face ${type === 'ok' ? 'avatar-ok' : 'avatar-bad'}`;
+    text.innerText = title;
+    text.style.color = type === 'ok' ? '#ffd700' : '#ff4d4d';
+
+    playSound('cutin');
+    overlay.classList.add('active');
+
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      setTimeout(callback, 250);
+    }, 1100);
+  }
+
   function dealBaccarat() {
     if (bacDealing) return;
     if (bacCredits < bacBet || bacBet <= 0) {
       if (bacCredits <= 0) {
         bacCredits = 500; bacBet = 100;
         document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
-        document.getElementById('bacResultMsg').innerText = "💸 파산 지원금 500 칩 지급!";
+        document.getElementById('bacResultMsg').innerText = "💸 파산 지원금 지급!";
+        setDealer('bad', "벌써 다 털렸냐? 500칩 줄 테니 다시 덤벼라 💸");
         return;
       }
       document.getElementById('bacResultMsg').innerText = "칩이 부족합니다!";
@@ -540,12 +637,11 @@
     bacDealing = true;
     bacCredits -= bacBet;
     document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
-    document.getElementById('bacResultMsg').innerText = "카드를 배분 중입니다...";
+    resetBacBoard();
+    setDealer('ok', "패 돌린다! 긴장 바짝 해라 🃏");
 
     const pCardsEl = document.getElementById('playerCards');
     const bCardsEl = document.getElementById('bankerCards');
-    pCardsEl.innerHTML = ''; bCardsEl.innerHTML = '';
-
     const draw = () => ({ suit: SUITS[Math.floor(Math.random()*4)], val: VALUES[Math.floor(Math.random()*13)] });
 
     const p1 = draw(), p2 = draw();
@@ -562,57 +658,92 @@
 
       document.getElementById('playerScore').innerText = pScore;
       document.getElementById('bankerScore').innerText = bScore;
+      updateAvatarReactions(pScore, bScore);
 
-      // 바카라 3번째 카드 룰 (간소화)
-      if (pScore <= 5) {
-        const p3 = draw();
-        setTimeout(() => {
-          pCardsEl.appendChild(createCardElement(p3));
-          pScore = (pScore + getCardValue(p3.val)) % 10;
-          document.getElementById('playerScore').innerText = pScore;
-          playSound('card');
-        }, 600);
-      }
+      // 내추럴 8, 9가 아니면 3번째 카드 룰 진입
+      const isNatural = (pScore >= 8 || bScore >= 8);
 
-      if (bScore <= 5) {
-        const b3 = draw();
-        setTimeout(() => {
-          bCardsEl.appendChild(createCardElement(b3));
-          bScore = (bScore + getCardValue(b3.val)) % 10;
-          document.getElementById('bankerScore').innerText = bScore;
-          playSound('card');
-        }, 1100);
-      }
+      const processPlayer3rd = (nextStep) => {
+        if (!isNatural && pScore <= 5) {
+          showCutIn('ok', "⚡ 오케이의 가호! PLAYER 3번째 카드! ⚡", () => {
+            const p3 = draw();
+            pCardsEl.appendChild(createCardElement(p3));
+            pScore = (pScore + getCardValue(p3.val)) % 10;
+            document.getElementById('playerScore').innerText = pScore;
+            updateAvatarReactions(pScore, bScore);
+            playSound('card');
+            nextStep(p3);
+          });
+        } else {
+          nextStep(null);
+        }
+      };
+
+      const processBanker3rd = (p3, finishStep) => {
+        if (!isNatural && bScore <= 5) {
+          setTimeout(() => {
+            showCutIn('bad', "🔥 안옼케이의 분노! BANKER 3번째 카드! 🔥", () => {
+              const b3 = draw();
+              bCardsEl.appendChild(createCardElement(b3));
+              bScore = (bScore + getCardValue(b3.val)) % 10;
+              document.getElementById('bankerScore').innerText = bScore;
+              updateAvatarReactions(pScore, bScore);
+              playSound('card');
+              finishStep();
+            });
+          }, 300);
+        } else {
+          finishStep();
+        }
+      };
 
       setTimeout(() => {
-        let winner = 'TIE';
-        if (pScore > bScore) winner = 'PLAYER';
-        else if (bScore > pScore) winner = 'BANKER';
+        processPlayer3rd((p3) => {
+          processBanker3rd(p3, () => {
+            // 승패 판정
+            setTimeout(() => {
+              let winner = 'TIE';
+              if (pScore > bScore) winner = 'PLAYER';
+              else if (bScore > pScore) winner = 'BANKER';
 
-        let winAmt = 0;
-        let resultText = "";
+              let winAmt = 0;
+              let isWin = (winner === selectedBet);
 
-        if (winner === selectedBet) {
-          playSound('win');
-          if (selectedBet === 'PLAYER') winAmt = bacBet * 2;
-          else if (selectedBet === 'BANKER') winAmt = Math.floor(bacBet * 1.95);
-          else winAmt = bacBet * 8;
+              if (isWin) {
+                playSound('win');
+                if (selectedBet === 'PLAYER') winAmt = bacBet * 2;
+                else if (selectedBet === 'BANKER') winAmt = Math.floor(bacBet * 1.95);
+                else winAmt = bacBet * 8;
 
-          bacCredits += winAmt;
-          resultText = `🎉 [${winner} 승리!] +${winAmt} 칩 획득! 🎉`;
-        } else if (winner === 'TIE') {
-          bacCredits += bacBet; // 무승부 시 베팅금 반환
-          resultText = "🤝 무승부(TIE) - 베팅 칩 반환!";
-          playSound('card');
-        } else {
-          playSound('lose');
-          resultText = `😭 [${winner} 승리] 베팅 실패!`;
-        }
+                bacCredits += winAmt;
+                document.getElementById('bacResultMsg').innerText = `🎉 [${winner} 승리!] +${winAmt} 칩 획득!`;
 
-        document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
-        document.getElementById('bacResultMsg').innerText = resultText;
-        bacDealing = false;
-      }, 1600);
+                // 승리 시 딜러 멘트 (언짢은 안옼케이)
+                setDealer('bad', "칫... 운이 좋았군. 다음 판엔 다 털어간다 😤");
+              } else if (winner === 'TIE') {
+                bacCredits += bacBet;
+                document.getElementById('bacResultMsg').innerText = "🤝 무승부(TIE) - 베팅 칩 반환!";
+                setDealer('ok', "비겼으니 원금은 돌려주지 👌");
+                playSound('card');
+              } else {
+                playSound('lose');
+                document.getElementById('bacResultMsg').innerText = `😭 [${winner} 승리] 베팅 실패!`;
+
+                // 패배 시 딜러 멘트 (약올리는 오케이)
+                const taunts = [
+                  "꺼억~ 오늘 야식비 굳었다! 고맙다 친구야 👌",
+                  "집까지 걸어가야겠네? ㅋㅋㅋ 💸",
+                  "그 실력으로 카지노는 무슨! 다시 충전해라 👌"
+                ];
+                setDealer('ok', taunts[Math.floor(Math.random() * taunts.length)]);
+              }
+
+              document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
+              bacDealing = false;
+            }, 600);
+          });
+        });
+      }, 700);
 
     }, 1100);
   }
