@@ -3,103 +3,132 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>옥 게임 월드! 3 in 1</title>
-  <meta property="og:title" content="옥 게임 월드! 3종 미니게임 대격돌 💎" />
-  <meta property="og:description" content="옥 잡기, 피하기, 플래피 버드까지! 지금 도전하세요 👌" />
+  <title>옥 게임 월드! 4 in 1</title>
+  <meta property="og:title" content="옥 게임 월드! 4종 종합 파티 🎰💎" />
+  <meta property="og:description" content="옥 잡기, 피하기, 플래피 버드, 카지노 슬롯머신까지 한 번에!" />
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
-    body { margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; background: radial-gradient(circle at top, #142c20, #050a08 70%); color: #ffffff; overflow: hidden; }
-    #app { position: relative; width: min(100vw, 480px); height: 100vh; max-height: 860px; overflow: hidden; background: linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.5)), radial-gradient(circle at 50% 30%, #1f5036, #07100b 80%); box-shadow: 0 0 40px rgba(0,0,0,0.8); border-radius: 12px; }
-    .screen { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; text-align: center; background: rgba(4, 12, 7, 0.96); backdrop-filter: blur(8px); z-index: 100; color: #ffffff; }
+    body { margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; background: #0a0200; color: #ffffff; overflow: hidden; }
+    #app { position: relative; width: min(100vw, 480px); height: 100vh; max-height: 860px; overflow: hidden; background: #120300; border-radius: 12px; }
+    .screen { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; background: rgba(4, 12, 7, 0.96); z-index: 100; }
     .hidden { display: none !important; }
-    .bigEmoji { font-size: 56px; margin-bottom: 8px; }
-    .screenTitle { font-size: 28px; font-weight: 900; margin-bottom: 8px; color: #8cff9e; }
-    .screenText { font-size: 15px; line-height: 1.5; opacity: 0.9; margin-bottom: 20px; color: #ffffff; }
-    .menu-btn { width: 100%; max-width: 300px; margin-bottom: 12px; border: none; border-radius: 999px; padding: 15px 18px; font-size: 16px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.35); transition: transform 0.1s; }
-    .menu-btn:active { transform: scale(0.96); }
+    .screenTitle { font-size: 26px; font-weight: 900; margin-bottom: 8px; color: #8cff9e; }
+    .screenText { font-size: 14px; opacity: 0.9; margin-bottom: 16px; }
+    .menu-btn { width: 100%; max-width: 320px; margin-bottom: 10px; border: none; border-radius: 999px; padding: 13px 16px; font-size: 15px; font-weight: 900; cursor: pointer; }
     .btn-green { background: #72f28b; color: #0b3717; }
     .btn-blue { background: #4dabf7; color: #0b1f37; }
     .btn-yellow { background: #ffd84c; color: #3d2800; }
-    .btn-back { background: rgba(255,255,255,0.2); color: white; margin-top: 8px; }
-    .pill { background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.25); backdrop-filter: blur(8px); border-radius: 999px; padding: 8px 14px; color: white; }
+    .btn-red { background: #ff4d4d; color: #ffffff; }
+    .btn-back { background: rgba(255,255,255,0.2); color: white; margin-top: 6px; }
+    .pill { background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 6px 12px; color: white; font-size: 13px; font-weight: bold; }
+    .top-bar { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; z-index: 20; pointer-events: none; }
     #catchGameArea { position: absolute; inset: 0; }
-    #feverGlow { position: absolute; inset: 0; pointer-events: none; border: 4px solid transparent; z-index: 12; transition: border-color .3s; }
-    .fever-active #feverGlow { border-color: #ffd84c; animation: pulseGlow .6s infinite alternate; }
-    @keyframes pulseGlow { from { box-shadow: inset 0 0 15px #ffb300; } to { box-shadow: inset 0 0 35px #ff4500; } }
-    #topBar1, #topBar2, #topBar3 { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; z-index: 20; font-weight: 800; font-size: 15px; pointer-events: none; }
-    #feverBarContainer { position: absolute; top: 60px; left: 16px; right: 16px; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 20; pointer-events: none; }
-    #feverBar { width: 0%; height: 100%; background: linear-gradient(90deg, #43d46e, #ffe65a, #ff4500); transition: width 0.1s linear; }
-    #combo { position: absolute; top: 122px; width: 100%; text-align: center; font-size: 22px; font-weight: 900; color: #fff86b; z-index: 15; opacity: 0; transform: scale(.7); transition: .12s; text-shadow: 0 2px 6px black; pointer-events: none; }
-    #combo.show { opacity: 1; transform: scale(1); }
-    .target { position: absolute; width: 84px; height: 84px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; cursor: pointer; animation: pop .18s ease-out; box-shadow: 0 6px 18px rgba(0,0,0,.45); z-index: 8; background-size: cover; background-position: center; }
-    .jade { background-color: #0c7438; background-image: radial-gradient(circle at 35% 25%, #d8ffe1, #43d46e 35%, #0c7438 72%); border: 4px solid rgba(255,255,255,.9); color: white; font-size: 30px; text-shadow: 0 2px 4px #06441e; }
-    .gold { background-color: #e08b00; background-image: radial-gradient(circle at 35% 25%, #fffbc7, #ffd84c 35%, #e08b00 75%); border: 4px solid #fff3a0; color: #5a3700; font-size: 26px; }
-    .target-ok-photo { background-color: #ffd84c; background-image: url('./ok_photo.png.jpg'); border: 4px solid #fff86b; box-shadow: 0 0 16px rgba(255, 230, 90, 0.8); }
-    .target-bad-photo { background-color: #333; background-image: url('./bad_photo.png.jpg'); border: 4px solid #ff2222; box-shadow: 0 0 16px rgba(255, 34, 34, 0.8); }
-    @keyframes pop { from { transform: scale(.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .floatText { position: absolute; z-index: 30; font-weight: 900; font-size: 22px; pointer-events: none; animation: floatUp .7s ease-out forwards; text-shadow: 0 2px 4px black; }
-    @keyframes floatUp { 0% { transform: translateY(0) scale(.7); opacity: 0; } 20% { opacity: 1; transform: translateY(-10px) scale(1.15); } 100% { opacity: 0; transform: translateY(-65px) scale(1); } }
+    #feverBarContainer { position: absolute; top: 52px; left: 16px; right: 16px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 20; }
+    #feverBar { width: 0%; height: 100%; background: #ffd84c; }
+    #combo { position: absolute; top: 100px; width: 100%; text-align: center; font-size: 20px; font-weight: 900; color: #fff86b; z-index: 15; opacity: 0; }
+    #combo.show { opacity: 1; }
+    .target { position: absolute; width: 84px; height: 84px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; cursor: pointer; z-index: 8; background-size: cover; background-position: center; }
+    .jade { background: #0c7438; border: 4px solid #fff; color: white; font-size: 28px; }
+    .gold { background: #e08b00; border: 4px solid #fff3a0; color: #5a3700; font-size: 24px; }
+    .target-ok-photo { background-image: url('./ok_photo.png.jpg'); border: 4px solid #fff86b; }
+    .target-bad-photo { background-image: url('./bad_photo.png.jpg'); border: 4px solid #ff2222; }
     #dodgeGameArea, #flappyGameArea { position: absolute; inset: 0; }
-    #dodgeGameArea { touch-action: none; }
     #dodgeCanvas, #flappyCanvas { width: 100%; height: 100%; display: block; }
+    #slotGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 18px 14px; background: #240a02; }
+    #statusBoard { display: flex; justify-content: space-around; background: rgba(0,0,0,0.6); border: 2px solid #ffd700; border-radius: 12px; padding: 8px; }
+    .status-val { font-size: 20px; font-weight: 900; }
+    #machineWrap { background: #855800; padding: 10px; border-radius: 14px; }
+    #slotWindow { display: flex; justify-content: space-between; gap: 6px; background: #000; padding: 6px; border-radius: 8px; height: 140px; overflow: hidden; position: relative; }
+    .reel { flex: 1; height: 100%; background: #1a1a1a; border-radius: 6px; overflow: hidden; position: relative; }
+    .reel-strip { position: absolute; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; }
+    .symbol { height: 128px; display: flex; justify-content: center; align-items: center; font-size: 40px; }
+    .sym-photo { width: 80px; height: 80px; border-radius: 50%; background-size: cover; background-position: center; }
+    .sym-ok { background-image: url('./ok_photo.png.jpg'); border: 3px solid #ffd700; }
+    .sym-bad { background-image: url('./bad_photo.png.jpg'); border: 3px solid #ff3333; }
+    #messageBanner { min-height: 40px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 15px; font-weight: 900; color: #fff86b; background: rgba(0,0,0,0.4); border-radius: 8px; }
+    .bet-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); padding: 5px 12px; border-radius: 999px; }
+    .bet-btn { background: #ffd700; color: #402300; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; font-weight: 900; }
+    #spinBtn { width: 100%; border: none; border-radius: 999px; padding: 14px; font-size: 20px; font-weight: 1000; background: #ff4d4d; color: #fff; }
   </style>
 </head>
 <body>
 <div id="app">
   <div id="menuScreen" class="screen">
-    <div class="bigEmoji">🎮</div>
+    <div style="font-size:48px;margin-bottom:6px;">🎮</div>
     <div class="screenTitle">옥 게임 월드</div>
-    <div class="screenText">플레이할 게임을 선택하세요!</div>
-    <button class="menu-btn btn-green" onclick="startCatchGame()">💎 옥을 잡아라 (터치 순발력)</button>
-    <button class="menu-btn btn-blue" onclick="startDodgeGame()">🏃 안옼케이를 피해라 (무빙 회피)</button>
-    <button class="menu-btn btn-yellow" onclick="startFlappyGame()">🐤 날아라 오케이 (탭 점프)</button>
+    <div class="screenText">플레이할 미니게임을 골라보세요!</div>
+    <button class="menu-btn btn-green" onclick="startCatchGame()">💎 1. 옥을 잡아라 (터치)</button>
+    <button class="menu-btn btn-blue" onclick="startDodgeGame()">🏃 2. 안옼케이를 피해라 (피하기)</button>
+    <button class="menu-btn btn-yellow" onclick="startFlappyGame()">🐤 3. 날아라 오케이 (탭 점프)</button>
+    <button class="menu-btn btn-red" onclick="startSlotGame()">🎰 4. 마카오 옥 카지노 (슬롯)</button>
   </div>
 
   <div id="catchGameArea" class="hidden">
-    <div id="feverGlow"></div>
-    <div id="topBar1">
+    <div class="top-bar">
       <div class="pill">💎 <span id="score1">0</span></div>
       <div class="pill">⏱ <span id="time1">30</span>s</div>
     </div>
     <div id="feverBarContainer"><div id="feverBar"></div></div>
     <div id="combo"></div>
     <div id="catchEndScreen" class="screen hidden">
-      <div class="bigEmoji">💎</div>
       <div class="screenTitle">게임 종료!</div>
-      <div class="screenText">최종 점수<br><b style="font-size:40px;color:#8cff9e;" id="finalScore1">0</b> 점</div>
+      <div class="screenText">최종 점수: <b style="font-size:28px;color:#8cff9e;" id="finalScore1">0</b>점</div>
       <button class="menu-btn btn-green" onclick="startCatchGame()">다시 하기</button>
       <button class="menu-btn btn-back" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
 
   <div id="dodgeGameArea" class="hidden">
-    <div id="topBar2">
+    <div class="top-bar">
       <div class="pill">💎 <span id="score2">0</span>점</div>
       <div class="pill">❤️ <span id="lives2">❤️❤️❤️</span></div>
       <div class="pill">⏱ <span id="time2">0</span>초</div>
     </div>
     <canvas id="dodgeCanvas"></canvas>
     <div id="dodgeEndScreen" class="screen hidden">
-      <div class="bigEmoji">💥</div>
       <div class="screenTitle" style="color:#ff6b6b;">게임 오버!</div>
-      <div class="screenText">생존 시간: <b id="finalTime2" style="color:#ffe65a;">0</b>초<br>최종 점수: <b id="finalScore2" style="font-size:36px;color:#72f28b;">0</b> 점</div>
+      <div class="screenText">생존: <b id="finalTime2">0</b>초 / 점수: <b id="finalScore2" style="color:#72f28b;">0</b>점</div>
       <button class="menu-btn btn-blue" onclick="startDodgeGame()">다시 달리기</button>
       <button class="menu-btn btn-back" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
 
   <div id="flappyGameArea" class="hidden">
-    <div id="topBar3">
+    <div class="top-bar">
       <div class="pill">🚩 통과: <span id="score3">0</span></div>
       <div class="pill">👑 최고: <span id="best3">0</span></div>
     </div>
     <canvas id="flappyCanvas"></canvas>
     <div id="flappyEndScreen" class="screen hidden">
-      <div class="bigEmoji">💀</div>
       <div class="screenTitle" style="color:#ff6b6b;">추락했습니다!</div>
-      <div class="screenText">통과한 기둥 수<br><b style="font-size:42px;color:#ffd84c;" id="finalScore3">0</b> 개</div>
+      <div class="screenText">통과: <b style="font-size:28px;color:#ffd84c;" id="finalScore3">0</b>개</div>
       <button class="menu-btn btn-yellow" onclick="startFlappyGame()">다시 날기</button>
       <button class="menu-btn btn-back" onclick="goToMenu()">메뉴로 가기</button>
+    </div>
+  </div>
+
+  <div id="slotGameArea" class="hidden">
+    <h2 style="margin:0;text-align:center;color:#ffd700;font-size:20px;">🎰 MAKAU OK CASINO 🎰</h2>
+    <div id="statusBoard">
+      <div style="text-align:center;"><div style="font-size:11px;color:#ffae66;">보유 칩</div><div class="status-val" id="creditVal">1,000</div></div>
+      <div style="text-align:center;"><div style="font-size:11px;color:#ffae66;">획득 칩</div><div class="status-val" style="color:#72f28b;" id="winVal">0</div></div>
+    </div>
+    <div id="machineWrap">
+      <div id="slotWindow">
+        <div class="reel" id="reel0"><div class="reel-strip" id="strip0"></div></div>
+        <div class="reel" id="reel1"><div class="reel-strip" id="strip1"></div></div>
+        <div class="reel" id="reel2"><div class="reel-strip" id="strip2"></div></div>
+      </div>
+    </div>
+    <div id="messageBanner">베팅액을 정하고 레버를 당기세요!</div>
+    <div>
+      <div class="bet-bar" style="margin-bottom:6px;">
+        <button class="bet-btn" onclick="changeBet(-50)">-</button>
+        <span style="font-weight:bold;font-size:13px;">베팅: <b id="betVal" style="color:#ffd700;">100</b></span>
+        <button class="bet-btn" onclick="changeBet(50)">+</button>
+      </div>
+      <button id="spinBtn" onclick="spinSlot()">SPIN! 레버 당기기 🎰</button>
+      <button class="menu-btn btn-back" style="width:100%;margin-top:6px;padding:8px;" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
 </div>
@@ -109,6 +138,8 @@
   const catchGameArea = document.getElementById("catchGameArea");
   const dodgeGameArea = document.getElementById("dodgeGameArea");
   const flappyGameArea = document.getElementById("flappyGameArea");
+  const slotGameArea = document.getElementById("slotGameArea");
+
   const okImg = new Image(); okImg.src = './ok_photo.png.jpg';
   const badImg = new Image(); badImg.src = './bad_photo.png.jpg';
 
@@ -121,43 +152,50 @@
       const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
-      if (type === 'jump') {
-        osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+      if (type === 'jump' || type === 'spin') {
+        osc.frequency.setValueAtTime(350, now); osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
         gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         osc.start(now); osc.stop(now + 0.1);
-      } else if (type === 'pass') {
-        osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.12);
-        gain.gain.setValueAtTime(0.25, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-        osc.start(now); osc.stop(now + 0.12);
+      } else if (type === 'pass' || type === 'stop') {
+        osc.frequency.setValueAtTime(523, now); gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
       } else if (type === 'hit' || type === 'bad') {
         osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.linearRampToValueAtTime(60, now + 0.2);
         gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
         osc.start(now); osc.stop(now + 0.2);
-      } else if (type === 'item' || type === 'ok') {
+      } else {
         osc.frequency.setValueAtTime(659, now); osc.frequency.exponentialRampToValueAtTime(1318, now + 0.15);
-        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-        osc.start(now); osc.stop(now + 0.18);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.start(now); osc.stop(now + 0.15);
       }
     } catch(e) {}
   }
 
+  function hideAll() {
+    catchGameArea.classList.add("hidden");
+    dodgeGameArea.classList.add("hidden");
+    flappyGameArea.classList.add("hidden");
+    slotGameArea.classList.add("hidden");
+    menuScreen.classList.add("hidden");
+  }
+
   function goToMenu() {
     stopCatchGame(); stopDodgeGame(); stopFlappyGame();
-    catchGameArea.classList.add("hidden"); dodgeGameArea.classList.add("hidden"); flappyGameArea.classList.add("hidden");
+    hideAll();
     menuScreen.classList.remove("hidden");
   }
 
   /* 1. Catch */
   let catchTimer = null, catchSpawnTimer = null, feverTimer = null;
   let score1 = 0, timeLeft1 = 30, combo1 = 0, feverGauge1 = 0, isFever1 = false, catchPlaying = false;
-
   function startCatchGame() {
-    menuScreen.classList.add("hidden"); dodgeGameArea.classList.add("hidden"); flappyGameArea.classList.add("hidden");
-    catchGameArea.classList.remove("hidden"); document.getElementById("catchEndScreen").classList.add("hidden");
+    hideAll(); catchGameArea.classList.remove("hidden");
+    document.getElementById("catchEndScreen").classList.add("hidden");
     document.querySelectorAll(".catch-target").forEach(el => el.remove());
     score1 = 0; timeLeft1 = 30; combo1 = 0; feverGauge1 = 0; isFever1 = false; catchPlaying = true;
     document.getElementById("score1").innerText = score1; document.getElementById("time1").innerText = timeLeft1;
-    document.getElementById("feverBar").style.width = "0%"; catchGameArea.classList.remove("fever-active");
+    document.getElementById("feverBar").style.width = "0%";
     clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer);
     catchTimer = setInterval(() => {
       timeLeft1--; document.getElementById("time1").innerText = timeLeft1;
@@ -165,14 +203,11 @@
     }, 1000);
     runCatchSpawner();
   }
-
   function runCatchSpawner() {
     if (!catchPlaying) return;
     spawnCatchTarget();
-    const interval = Math.max(260, 520 - ((30 - timeLeft1) * 8));
-    catchSpawnTimer = setTimeout(runCatchSpawner, interval);
+    catchSpawnTimer = setTimeout(runCatchSpawner, Math.max(260, 520 - ((30 - timeLeft1) * 8)));
   }
-
   function spawnCatchTarget() {
     if (!catchPlaying) return;
     const target = document.createElement("div");
@@ -184,92 +219,60 @@
     else if (r < 0.50) { type = "gold"; points = 30; text = "玉✨"; }
     target.classList.add(type); target.innerText = text;
     const size = 84;
-    const maxX = catchGameArea.clientWidth - size - 16;
-    const minY = 90;
-    const maxY = catchGameArea.clientHeight - size - 40;
-    target.style.left = Math.floor(Math.random() * Math.max(1, maxX - 16)) + 16 + "px";
-    target.style.top = Math.floor(Math.random() * Math.max(1, maxY - minY)) + minY + "px";
+    target.style.left = Math.floor(Math.random() * Math.max(1, catchGameArea.clientWidth - size - 16)) + 16 + "px";
+    target.style.top = Math.floor(Math.random() * Math.max(1, catchGameArea.clientHeight - size - 100)) + 70 + "px";
     catchGameArea.appendChild(target);
-    const life = type === "target-ok-photo" ? 850 : (type === "target-bad-photo" ? 1100 : 950);
-    const removeTimer = setTimeout(() => {
-      if (target.parentElement) { target.remove(); if (type !== "target-bad-photo") { combo1 = 0; updateCombo1(); } }
-    }, life);
+    const life = type === "target-ok-photo" ? 850 : 1000;
+    const removeTimer = setTimeout(() => { if (target.parentElement) target.remove(); }, life);
     target.addEventListener("pointerdown", e => {
       e.stopPropagation(); e.preventDefault(); clearTimeout(removeTimer);
-      const rect = target.getBoundingClientRect(); const areaRect = catchGameArea.getBoundingClientRect();
-      hitCatchTarget(type, points, rect.left - areaRect.left + 20, rect.top - areaRect.top);
-      target.remove();
+      hitCatchTarget(type, points); target.remove();
     });
   }
-
-  function hitCatchTarget(type, basePoints, x, y) {
-    let finalPoints = basePoints;
+  function hitCatchTarget(type, basePoints) {
+    let pts = basePoints;
     if (type === "target-bad-photo") {
-      combo1 = 0; feverGauge1 = 0; document.getElementById("feverBar").style.width = "0%";
-      playSound("bad"); showFloatText(catchGameArea, "안옼케이! -100 😭", x, y, "#ff2222");
+      combo1 = 0; feverGauge1 = 0; document.getElementById("feverBar").style.width = "0%"; playSound("bad");
     } else {
-      combo1++; playSound(type === "target-ok-photo" ? "ok" : "item");
-      if (isFever1) { finalPoints *= 2; }
+      combo1++; playSound("ok");
+      if (isFever1) pts *= 2;
       else {
-        feverGauge1 = Math.min(100, feverGauge1 + (type === "target-ok-photo" ? 25 : 15));
+        feverGauge1 = Math.min(100, feverGauge1 + 20);
         document.getElementById("feverBar").style.width = feverGauge1 + "%";
         if (feverGauge1 >= 100) triggerFever1();
       }
-      if (type === "target-ok-photo") showFloatText(catchGameArea, `모든게 OK! +${finalPoints} 👌`, x, y, "#ffe65a");
-      else if (type === "gold") showFloatText(catchGameArea, `황금옥! +${finalPoints} ✨`, x, y, "#ffd84c");
-      else showFloatText(catchGameArea, `옥! +${finalPoints} 💎`, x, y, "#80ff9a");
     }
-    score1 = Math.max(0, score1 + finalPoints); document.getElementById("score1").innerText = score1; updateCombo1();
+    score1 = Math.max(0, score1 + pts); document.getElementById("score1").innerText = score1;
   }
-
   function triggerFever1() {
-    isFever1 = true; catchGameArea.classList.add("fever-active");
-    showFloatText(catchGameArea, "🔥 FEVER 2X! 🔥", catchGameArea.clientWidth / 2 - 70, 200, "#ffd84c");
-    let remain = 5000;
+    isFever1 = true;
+    let rem = 5000;
     feverTimer = setInterval(() => {
-      remain -= 100; document.getElementById("feverBar").style.width = (remain / 5000) * 100 + "%";
-      if (remain <= 0) {
-        clearInterval(feverTimer); isFever1 = false; feverGauge1 = 0;
-        document.getElementById("feverBar").style.width = "0%"; catchGameArea.classList.remove("fever-active");
-      }
+      rem -= 100; document.getElementById("feverBar").style.width = (rem / 5000) * 100 + "%";
+      if (rem <= 0) { clearInterval(feverTimer); isFever1 = false; feverGauge1 = 0; document.getElementById("feverBar").style.width = "0%"; }
     }, 100);
   }
-
-  function updateCombo1() {
-    const comboEl = document.getElementById("combo");
-    if (combo1 >= 3) { comboEl.innerText = `${combo1} COMBO! 🔥`; comboEl.classList.add("show"); }
-    else { comboEl.classList.remove("show"); }
-  }
-
-  function showFloatText(parent, text, x, y, color) {
-    const el = document.createElement("div"); el.className = "floatText"; el.innerText = text;
-    el.style.left = Math.max(10, Math.min(parent.clientWidth - 140, x)) + "px"; el.style.top = y + "px"; el.style.color = color;
-    parent.appendChild(el); setTimeout(() => el.remove(), 700);
-  }
-
   function endCatchGame() {
-    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer);
+    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer);
     document.querySelectorAll(".catch-target").forEach(el => el.remove());
-    document.getElementById("finalScore1").innerText = score1; document.getElementById("catchEndScreen").classList.remove("hidden");
+    document.getElementById("finalScore1").innerText = score1;
+    document.getElementById("catchEndScreen").classList.remove("hidden");
   }
-
   function stopCatchGame() {
-    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer);
+    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer);
     document.querySelectorAll(".catch-target").forEach(el => el.remove());
   }
 
   /* 2. Dodge */
   const dodgeCanvas = document.getElementById("dodgeCanvas"); const dodgeCtx = dodgeCanvas.getContext("2d");
   let dodgeAnimId = null, dodgePlaying = false, score2 = 0, lives2 = 3, survivalSeconds2 = 0, dodgeTimeTimer = null;
-  let dodgePlayer = { x: 0, y: 0, radius: 34, targetX: 0 }, drops2 = [], particles2 = [], lastSpawnTime2 = 0;
-
+  let dodgePlayer = { x: 0, y: 0, radius: 32, targetX: 0 }, drops2 = [], lastSpawnTime2 = 0;
   function startDodgeGame() {
-    menuScreen.classList.add("hidden"); catchGameArea.classList.add("hidden"); flappyGameArea.classList.add("hidden");
-    dodgeGameArea.classList.remove("hidden"); document.getElementById("dodgeEndScreen").classList.add("hidden");
+    hideAll(); dodgeGameArea.classList.remove("hidden"); document.getElementById("dodgeEndScreen").classList.add("hidden");
     const rect = dodgeGameArea.getBoundingClientRect();
     dodgeCanvas.width = rect.width; dodgeCanvas.height = rect.height;
-    dodgePlayer.y = dodgeCanvas.height - 70; dodgePlayer.x = dodgeCanvas.width / 2; dodgePlayer.targetX = dodgeCanvas.width / 2;
-    score2 = 0; lives2 = 3; survivalSeconds2 = 0; drops2 = []; particles2 = []; dodgePlaying = true;
+    dodgePlayer.y = dodgeCanvas.height - 65; dodgePlayer.x = dodgeCanvas.width / 2; dodgePlayer.targetX = dodgeCanvas.width / 2;
+    score2 = 0; lives2 = 3; survivalSeconds2 = 0; drops2 = []; dodgePlaying = true;
     document.getElementById("score2").innerText = score2; document.getElementById("time2").innerText = survivalSeconds2;
     document.getElementById("lives2").innerText = "❤️❤️❤️";
     clearInterval(dodgeTimeTimer);
@@ -281,53 +284,43 @@
     if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
     dodgeLoop(performance.now());
   }
-
   function handleDodgeMove(clientX) {
     if (!dodgePlaying) return;
     const rect = dodgeCanvas.getBoundingClientRect();
-    let x = clientX - rect.left;
-    dodgePlayer.targetX = Math.max(dodgePlayer.radius, Math.min(dodgeCanvas.width - dodgePlayer.radius, x));
+    dodgePlayer.targetX = Math.max(dodgePlayer.radius, Math.min(dodgeCanvas.width - dodgePlayer.radius, clientX - rect.left));
   }
   window.addEventListener('pointermove', e => { if (dodgePlaying) handleDodgeMove(e.clientX); });
   window.addEventListener('touchmove', e => { if (dodgePlaying && e.touches.length > 0) handleDodgeMove(e.touches[0].clientX); }, { passive: false });
-
   function spawnDodgeDrop() {
     const r = Math.random();
-    let type = 'bad', radius = 32, speed = Math.random() * 2 + 3.2 + (survivalSeconds2 * 0.08);
-    if (r < 0.20) { type = 'ok_item'; radius = 26; speed = 3.5; }
-    else if (r < 0.35) { type = 'gem'; radius = 20; speed = 4.0; }
-    drops2.push({ x: Math.random() * (dodgeCanvas.width - radius * 2) + radius, y: -radius - 10, radius, speed, type, angle: 0, rotSpeed: (Math.random() - 0.5) * 0.08 });
+    let type = 'bad', radius = 30, speed = 3.5 + (survivalSeconds2 * 0.08);
+    if (r < 0.25) { type = 'ok_item'; radius = 26; }
+    drops2.push({ x: Math.random() * (dodgeCanvas.width - radius * 2) + radius, y: -radius - 10, radius, speed, type });
   }
-
   function dodgeLoop(currentTime) {
     if (!dodgePlaying) return;
     dodgePlayer.x += (dodgePlayer.targetX - dodgePlayer.x) * 0.25;
-    const interval = Math.max(220, 600 - (survivalSeconds2 * 12));
-    if (currentTime - lastSpawnTime2 > interval) { spawnDodgeDrop(); lastSpawnTime2 = currentTime; }
+    if (currentTime - lastSpawnTime2 > Math.max(220, 580 - (survivalSeconds2 * 10))) { spawnDodgeDrop(); lastSpawnTime2 = currentTime; }
     dodgeCtx.clearRect(0, 0, dodgeCanvas.width, dodgeCanvas.height);
     for (let i = drops2.length - 1; i >= 0; i--) {
-      let d = drops2[i]; d.y += d.speed; d.angle += d.rotSpeed;
+      let d = drops2[i]; d.y += d.speed;
       if (d.y - d.radius > dodgeCanvas.height) { drops2.splice(i, 1); continue; }
-      dodgeCtx.save(); dodgeCtx.translate(d.x, d.y); dodgeCtx.rotate(d.angle);
+      dodgeCtx.save(); dodgeCtx.translate(d.x, d.y);
       dodgeCtx.beginPath(); dodgeCtx.arc(0, 0, d.radius, 0, Math.PI * 2);
       if (d.type === 'bad') {
         dodgeCtx.fillStyle = '#ff3333'; dodgeCtx.fill(); dodgeCtx.clip();
         if (badImg.complete && badImg.naturalWidth) dodgeCtx.drawImage(badImg, -d.radius, -d.radius, d.radius*2, d.radius*2);
-      } else if (d.type === 'ok_item') {
+      } else {
         dodgeCtx.fillStyle = '#ffe65a'; dodgeCtx.fill(); dodgeCtx.clip();
         if (okImg.complete && okImg.naturalWidth) dodgeCtx.drawImage(okImg, -d.radius, -d.radius, d.radius*2, d.radius*2);
-      } else {
-        dodgeCtx.fillStyle = '#43d46e'; dodgeCtx.fill();
-        dodgeCtx.fillStyle = 'white'; dodgeCtx.font = 'bold 16px sans-serif'; dodgeCtx.textAlign = 'center'; dodgeCtx.textBaseline = 'middle'; dodgeCtx.fillText('玉', 0, 1);
       }
       dodgeCtx.restore();
       if (Math.hypot(dodgePlayer.x - d.x, dodgePlayer.y - d.y) < dodgePlayer.radius + d.radius - 6) {
         if (d.type === 'bad') {
-          lives2--; document.getElementById("lives2").innerText = "❤️❤️❤️".slice(0, Math.max(0, lives2));
-          playSound('hit');
+          lives2--; document.getElementById("lives2").innerText = "❤️❤️❤️".slice(0, Math.max(0, lives2)); playSound('hit');
           if (lives2 <= 0) { endDodgeGame(); return; }
         } else {
-          score2 += (d.type === 'ok_item' ? 50 : 20); document.getElementById("score2").innerText = score2; playSound('item');
+          score2 += 50; document.getElementById("score2").innerText = score2; playSound('ok');
         }
         drops2.splice(i, 1);
       }
@@ -339,14 +332,12 @@
     dodgeCtx.restore();
     dodgeAnimId = requestAnimationFrame(dodgeLoop);
   }
-
   function endDodgeGame() {
     dodgePlaying = false; clearInterval(dodgeTimeTimer);
     if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
     document.getElementById("finalTime2").innerText = survivalSeconds2; document.getElementById("finalScore2").innerText = score2;
     document.getElementById("dodgeEndScreen").classList.remove("hidden");
   }
-
   function stopDodgeGame() {
     dodgePlaying = false; clearInterval(dodgeTimeTimer);
     if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
@@ -355,11 +346,9 @@
   /* 3. Flappy */
   const flappyCanvas = document.getElementById("flappyCanvas"); const flappyCtx = flappyCanvas.getContext("2d");
   let flappyAnimId = null, flappyPlaying = false, score3 = 0, bestScore3 = 0;
-  let bird = { x: 80, y: 250, radius: 24, vy: 0, gravity: 0.38, jump: -6.8 }, pipes = [], lastPipeSpawn = 0;
-
+  let bird = { x: 70, y: 250, radius: 24, vy: 0, gravity: 0.38, jump: -6.5 }, pipes = [], lastPipeSpawn = 0;
   function startFlappyGame() {
-    menuScreen.classList.add("hidden"); catchGameArea.classList.add("hidden"); dodgeGameArea.classList.add("hidden");
-    flappyGameArea.classList.remove("hidden"); document.getElementById("flappyEndScreen").classList.add("hidden");
+    hideAll(); flappyGameArea.classList.remove("hidden"); document.getElementById("flappyEndScreen").classList.add("hidden");
     const rect = flappyGameArea.getBoundingClientRect();
     flappyCanvas.width = rect.width; flappyCanvas.height = rect.height;
     score3 = 0; bird.y = flappyCanvas.height / 2; bird.vy = 0; pipes = []; flappyPlaying = true;
@@ -368,71 +357,141 @@
     if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
     flappyLoop(performance.now());
   }
-
-  function handleFlappyTap(e) {
+  flappyGameArea.addEventListener("pointerdown", e => {
     if (!flappyPlaying) return;
     if (e) { e.preventDefault(); e.stopPropagation(); }
     bird.vy = bird.jump; playSound('jump');
-  }
-  flappyGameArea.addEventListener("pointerdown", handleFlappyTap);
-
+  });
   function spawnPipe() {
-    const gap = 160, minH = 70;
-    const maxH = flappyCanvas.height - gap - minH - 40;
-    const topHeight = Math.floor(Math.random() * (maxH - minH)) + minH;
-    pipes.push({ x: flappyCanvas.width + 20, width: 64, topHeight: topHeight, bottomY: topHeight + gap, passed: false });
+    const gap = 160, topHeight = Math.floor(Math.random() * (flappyCanvas.height - gap - 120)) + 60;
+    pipes.push({ x: flappyCanvas.width + 10, width: 60, topHeight, bottomY: topHeight + gap, passed: false });
   }
-
   function flappyLoop(currentTime) {
     if (!flappyPlaying) return;
     bird.vy += bird.gravity; bird.y += bird.vy;
     if (currentTime - lastPipeSpawn > 1600) { spawnPipe(); lastPipeSpawn = currentTime; }
     flappyCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
-
     for (let i = pipes.length - 1; i >= 0; i--) {
       const p = pipes[i]; p.x -= 2.6;
       if (p.x + p.width < 0) { pipes.splice(i, 1); continue; }
-      flappyCtx.fillStyle = '#220808'; flappyCtx.strokeStyle = '#ff3333'; flappyCtx.lineWidth = 3;
-      flappyCtx.fillRect(p.x, 0, p.width, p.topHeight); flappyCtx.strokeRect(p.x, 0, p.width, p.topHeight);
-      if (badImg.complete && badImg.naturalWidth) flappyCtx.drawImage(badImg, p.x + (p.width - 50)/2, p.topHeight - 56, 50, 50);
-
-      const bottomHeight = flappyCanvas.height - p.bottomY;
-      flappyCtx.fillRect(p.x, p.bottomY, p.width, bottomHeight); flappyCtx.strokeRect(p.x, p.bottomY, p.width, bottomHeight);
-      if (badImg.complete && badImg.naturalWidth) flappyCtx.drawImage(badImg, p.x + (p.width - 50)/2, p.bottomY + 6, 50, 50);
-
+      flappyCtx.fillStyle = '#220808'; flappyCtx.fillRect(p.x, 0, p.width, p.topHeight);
+      flappyCtx.fillRect(p.x, p.bottomY, p.width, flappyCanvas.height - p.bottomY);
+      if (badImg.complete && badImg.naturalWidth) {
+        flappyCtx.drawImage(badImg, p.x + 5, p.topHeight - 50, 50, 50);
+        flappyCtx.drawImage(badImg, p.x + 5, p.bottomY + 5, 50, 50);
+      }
       if (!p.passed && p.x + p.width < bird.x - bird.radius) {
         p.passed = true; score3++; document.getElementById("score3").innerText = score3; playSound('pass');
       }
-      const inX = (bird.x + bird.radius - 4 > p.x) && (bird.x - bird.radius + 4 < p.x + p.width);
-      const inTopY = bird.y - bird.radius + 4 < p.topHeight;
-      const inBottomY = bird.y + bird.radius - 4 > p.bottomY;
-      if (inX && (inTopY || inBottomY)) { endFlappyGame(); return; }
+      if ((bird.x + bird.radius - 4 > p.x && bird.x - bird.radius + 4 < p.x + p.width) && (bird.y - bird.radius + 4 < p.topHeight || bird.y + bird.radius - 4 > p.bottomY)) { endFlappyGame(); return; }
     }
-
     if (bird.y + bird.radius > flappyCanvas.height || bird.y - bird.radius < 0) { endFlappyGame(); return; }
-
     flappyCtx.save(); flappyCtx.translate(bird.x, bird.y);
-    const angle = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, bird.vy * 0.08));
-    flappyCtx.rotate(angle);
     flappyCtx.beginPath(); flappyCtx.arc(0, 0, bird.radius, 0, Math.PI * 2);
-    flappyCtx.fillStyle = '#ffd84c'; flappyCtx.shadowColor = '#ffe65a'; flappyCtx.shadowBlur = 12; flappyCtx.fill(); flappyCtx.clip();
-    if (okImg.complete && okImg.naturalWidth) flappyCtx.drawImage(okImg, -bird.radius, -bird.radius, bird.radius * 2, bird.radius * 2);
+    flappyCtx.fillStyle = '#ffd84c'; flappyCtx.fill(); flappyCtx.clip();
+    if (okImg.complete && okImg.naturalWidth) flappyCtx.drawImage(okImg, -bird.radius, -bird.radius, bird.radius*2, bird.radius*2);
     flappyCtx.restore();
-
     flappyAnimId = requestAnimationFrame(flappyLoop);
   }
-
   function endFlappyGame() {
-    flappyPlaying = false;
-    if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
-    playSound('hit');
-    if (score3 > bestScore3) bestScore3 = score3;
+    flappyPlaying = false; if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
+    playSound('hit'); if (score3 > bestScore3) bestScore3 = score3;
     document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden");
   }
+  function stopFlappyGame() { flappyPlaying = false; if (flappyAnimId) cancelAnimationFrame(flappyAnimId); }
 
-  function stopFlappyGame() {
-    flappyPlaying = false;
-    if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
+  /* 4. Slot */
+  let credits = 1000, currentBet = 100, isSpinning = false;
+  const SYMBOLS = [
+    { id: 'ok', html: '<div class="sym-photo sym-ok"></div>', weight: 1.5 },
+    { id: 'gem', html: '💎', weight: 2.5 },
+    { id: 'seven', html: '7️⃣', weight: 3 },
+    { id: 'bad', html: '<div class="sym-photo sym-bad"></div>', weight: 2 }
+  ];
+  function startSlotGame() {
+    hideAll(); slotGameArea.classList.remove("hidden");
+    initReels();
+  }
+  function initReels() {
+    for (let r = 0; r < 3; r++) {
+      const strip = document.getElementById(`strip${r}`);
+      strip.innerHTML = '';
+      for (let i = 0; i < 20; i++) {
+        const sym = SYMBOLS[i % SYMBOLS.length];
+        const div = document.createElement('div');
+        div.className = 'symbol';
+        div.innerHTML = sym.html;
+        strip.appendChild(div);
+      }
+      strip.style.transform = `translateY(0px)`;
+    }
+  }
+  function changeBet(amount) {
+    if (isSpinning) return;
+    currentBet = Math.max(50, Math.min(credits, currentBet + amount));
+    if (credits === 0) currentBet = 0;
+    document.getElementById('betVal').innerText = currentBet;
+  }
+  function spinSlot() {
+    if (isSpinning) return;
+    if (credits < currentBet || currentBet <= 0) {
+      if (credits <= 0) {
+        credits = 500; currentBet = 100;
+        document.getElementById('creditVal').innerText = credits.toLocaleString();
+        document.getElementById('betVal').innerText = currentBet;
+        document.getElementById('messageBanner').innerText = "💸 파산 지원금 500 칩 지급!";
+        return;
+      }
+      document.getElementById('messageBanner').innerText = "칩이 부족합니다!";
+      return;
+    }
+    isSpinning = true; credits -= currentBet;
+    document.getElementById('creditVal').innerText = credits.toLocaleString();
+    document.getElementById('winVal').innerText = "0";
+    document.getElementById('spinBtn').disabled = true;
+
+    const results = [SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)], SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)], SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)]];
+    for (let r = 0; r < 3; r++) {
+      const strip = document.getElementById(`strip${r}`);
+      strip.children[19].innerHTML = results[r].html;
+      strip.style.transition = 'none';
+      strip.style.transform = 'translateY(0px)';
+      setTimeout(() => {
+        playSound('spin');
+        strip.style.transition = `transform ${1.4 + r * 0.4}s cubic-bezier(0.1, 0.9, 0.2, 1)`;
+        strip.style.transform = `translateY(${-(19) * 128 + 6}px)`;
+      }, 40);
+      setTimeout(() => playSound('stop'), (1.4 + r * 0.4) * 1000);
+    }
+    setTimeout(() => {
+      evaluateSlot(results);
+      isSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+    }, 2600);
+  }
+  function evaluateSlot(res) {
+    const ids = res.map(r => r.id);
+    let mult = 0, msg = "";
+    if (ids[0] === ids[1] && ids[1] === ids[2]) {
+      if (ids[0] === 'ok') { mult = 30; msg = "👑 ULTRA JACKPOT! 다 OK! 👑"; playSound('ok'); }
+      else if (ids[0] === 'gem') { mult = 15; msg = "💎 대박! 옥 보석 3개! 💎"; playSound('ok'); }
+      else if (ids[0] === 'seven') { mult = 10; msg = "7️⃣ 럭키 세븐 3개 완성! 7️⃣"; playSound('ok'); }
+      else if (ids[0] === 'bad') {
+        const pen = currentBet * 2; credits = Math.max(0, credits - pen);
+        document.getElementById('creditVal').innerText = credits.toLocaleString();
+        playSound('bad'); document.getElementById('messageBanner').innerText = `❌ 3 안옼케이! -${pen} 칩 몰수!`;
+        return;
+      }
+    } else if (ids.includes('ok')) {
+      mult = ids.filter(id => id === 'ok').length === 2 ? 3 : 1.2;
+      msg = `👌 오케이 보너스 당첨!`; playSound('ok');
+    } else { msg = "아쉽네요! 다음 기회에... 🥲"; }
+    const win = Math.floor(currentBet * mult);
+    credits += win;
+    document.getElementById('creditVal').innerText = credits.toLocaleString();
+    document.getElementById('winVal').innerText = win.toLocaleString();
+    document.getElementById('messageBanner').innerText = msg;
+    if (credits === 0) document.getElementById('messageBanner').innerText = "💸 파산! 버튼을 누르면 무료 충전됩니다.";
   }
 </script>
 </body>
