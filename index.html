@@ -143,8 +143,8 @@
 
     .target {
       position: absolute;
-      width: 82px;
-      height: 82px;
+      width: 86px;
+      height: 86px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -156,10 +156,12 @@
       z-index: 8;
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
     }
 
     .jade {
-      background: radial-gradient(circle at 35% 25%, #d8ffe1, #43d46e 35%, #0c7438 72%);
+      background-color: #0c7438;
+      background-image: radial-gradient(circle at 35% 25%, #d8ffe1, #43d46e 35%, #0c7438 72%);
       border: 4px solid rgba(255,255,255,.9);
       color: white;
       font-size: 30px;
@@ -167,22 +169,25 @@
     }
 
     .gold {
-      background: radial-gradient(circle at 35% 25%, #fffbc7, #ffd84c 35%, #e08b00 75%);
+      background-color: #e08b00;
+      background-image: radial-gradient(circle at 35% 25%, #fffbc7, #ffd84c 35%, #e08b00 75%);
       border: 4px solid #fff3a0;
       color: #5a3700;
       font-size: 26px;
     }
 
-    .photo-ok {
-      background-image: url('ok_photo.png');
+    .target-ok-photo {
+      background-color: #ffd84c;
+      background-image: url('./ok_photo.png.jpg');
       border: 4px solid #fff86b;
-      box-shadow: 0 0 16px rgba(255, 230, 90, 0.7);
+      box-shadow: 0 0 16px rgba(255, 230, 90, 0.8);
     }
 
-    .photo-bad {
-      background-image: url('bad_photo.png');
+    .target-bad-photo {
+      background-color: #333;
+      background-image: url('./bad_photo.png.jpg');
       border: 4px solid #ff2222;
-      box-shadow: 0 0 16px rgba(255, 34, 34, 0.7);
+      box-shadow: 0 0 16px rgba(255, 34, 34, 0.8);
     }
 
     @keyframes pop {
@@ -340,14 +345,14 @@
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
       osc.start(now);
       osc.stop(now + 0.1);
-    } else if (type === "gold" || type === "photo-ok") {
+    } else if (type === "gold" || type === "target-ok-photo") {
       osc.frequency.setValueAtTime(659.25, now);
       osc.frequency.exponentialRampToValueAtTime(1318.51, now + 0.18);
       gain.gain.setValueAtTime(0.35, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
       osc.start(now);
       osc.stop(now + 0.2);
-    } else if (type === "photo-bad") {
+    } else if (type === "target-bad-photo") {
       osc.type = "sawtooth";
       osc.frequency.setValueAtTime(260, now);
       osc.frequency.linearRampToValueAtTime(50, now + 0.3);
@@ -424,15 +429,15 @@
     let points = 10;
     let text = "玉";
 
-    if (r < 0.18) {
-      type = "photo-ok";
+    if (r < 0.20) {
+      type = "target-ok-photo";
       points = 50;
       text = "";
-    } else if (r < 0.33) {
-      type = "photo-bad";
+    } else if (r < 0.35) {
+      type = "target-bad-photo";
       points = -100;
       text = "";
-    } else if (r < 0.48) {
+    } else if (r < 0.50) {
       type = "gold";
       points = 30;
       text = "玉✨";
@@ -441,7 +446,7 @@
     target.classList.add(type);
     target.innerText = text;
 
-    const size = 82;
+    const size = 86;
     const maxX = game.clientWidth - size - 16;
     const minY = 160;
     const maxY = game.clientHeight - size - 40;
@@ -451,12 +456,12 @@
 
     game.appendChild(target);
 
-    const life = type === "photo-ok" ? 800 : (type === "photo-bad" ? 1100 : 950);
+    const life = type === "target-ok-photo" ? 850 : (type === "target-bad-photo" ? 1100 : 950);
 
     const removeTimer = setTimeout(() => {
       if (target.parentElement) {
         target.remove();
-        if (type !== "photo-bad") {
+        if (type !== "target-bad-photo") {
           combo = 0;
           updateCombo();
         }
@@ -479,7 +484,7 @@
   function hitTarget(type, basePoints, x, y) {
     let finalPoints = basePoints;
 
-    if (type === "photo-bad") {
+    if (type === "target-bad-photo") {
       combo = 0;
       feverGauge = 0;
       updateFeverUI();
@@ -493,12 +498,12 @@
       if (isFever) {
         finalPoints *= 2;
       } else {
-        feverGauge = Math.min(100, feverGauge + (type === "photo-ok" ? 25 : 15));
+        feverGauge = Math.min(100, feverGauge + (type === "target-ok-photo" ? 25 : 15));
         updateFeverUI();
         if (feverGauge >= 100) triggerFever();
       }
 
-      if (type === "photo-ok") {
+      if (type === "target-ok-photo") {
         showFloatingText(`모든게 OK! +${finalPoints} 👌`, x, y, "#ffe65a");
       } else if (type === "gold") {
         showFloatingText(`황금옥! +${finalPoints} ✨`, x, y, "#ffd84c");
