@@ -3,40 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>옥 게임 월드! 4 in 1</title>
-  <meta property="og:title" content="옥 게임 월드! 4종 종합 파티 🎰💎" />
-  <meta property="og:description" content="옥 잡기, 피하기, 플래피 버드, 카지노 슬롯머신까지 한 번에!" />
+  <title>옥 게임 월드! 5 in 1</title>
+  <meta property="og:title" content="옥 게임 월드! 5종 종합 파티 🎰🃏" />
+  <meta property="og:description" content="옥 잡기, 피하기, 플래피, 슬롯머신, 그리고 바카라까지!" />
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
     body { margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; background: #0a0200; color: #ffffff; overflow: hidden; }
     #app { position: relative; width: min(100vw, 480px); height: 100vh; max-height: 860px; overflow: hidden; background: #120300; border-radius: 12px; }
-    .screen { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; background: rgba(4, 12, 7, 0.96); z-index: 100; }
+    .screen { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 18px; text-align: center; background: rgba(4, 12, 7, 0.96); z-index: 100; }
     .hidden { display: none !important; }
-    .screenTitle { font-size: 26px; font-weight: 900; margin-bottom: 8px; color: #8cff9e; }
-    .screenText { font-size: 14px; opacity: 0.9; margin-bottom: 16px; }
-    .menu-btn { width: 100%; max-width: 320px; margin-bottom: 10px; border: none; border-radius: 999px; padding: 13px 16px; font-size: 15px; font-weight: 900; cursor: pointer; }
+    .screenTitle { font-size: 24px; font-weight: 900; margin-bottom: 6px; color: #8cff9e; }
+    .screenText { font-size: 13px; opacity: 0.9; margin-bottom: 14px; }
+    .menu-btn { width: 100%; max-width: 320px; margin-bottom: 8px; border: none; border-radius: 999px; padding: 11px 14px; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .menu-btn:active { transform: scale(0.96); }
     .btn-green { background: #72f28b; color: #0b3717; }
     .btn-blue { background: #4dabf7; color: #0b1f37; }
     .btn-yellow { background: #ffd84c; color: #3d2800; }
     .btn-red { background: #ff4d4d; color: #ffffff; }
+    .btn-purple { background: linear-gradient(180deg, #b15eff, #6a0dad); color: #ffffff; }
     .btn-back { background: rgba(255,255,255,0.2); color: white; margin-top: 6px; }
     .pill { background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 6px 12px; color: white; font-size: 13px; font-weight: bold; }
     .top-bar { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; z-index: 20; pointer-events: none; }
+
+    /* 1. Catch */
     #catchGameArea { position: absolute; inset: 0; }
     #feverBarContainer { position: absolute; top: 52px; left: 16px; right: 16px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 20; }
     #feverBar { width: 0%; height: 100%; background: #ffd84c; }
-    #combo { position: absolute; top: 100px; width: 100%; text-align: center; font-size: 20px; font-weight: 900; color: #fff86b; z-index: 15; opacity: 0; }
-    #combo.show { opacity: 1; }
     .target { position: absolute; width: 84px; height: 84px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; cursor: pointer; z-index: 8; background-size: cover; background-position: center; }
     .jade { background: #0c7438; border: 4px solid #fff; color: white; font-size: 28px; }
     .gold { background: #e08b00; border: 4px solid #fff3a0; color: #5a3700; font-size: 24px; }
     .target-ok-photo { background-image: url('./ok_photo.png.jpg'); border: 4px solid #fff86b; }
     .target-bad-photo { background-image: url('./bad_photo.png.jpg'); border: 4px solid #ff2222; }
+
+    /* 2 & 3: Canvas */
     #dodgeGameArea, #flappyGameArea { position: absolute; inset: 0; }
     #dodgeCanvas, #flappyCanvas { width: 100%; height: 100%; display: block; }
+
+    /* 4. Slot */
     #slotGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 18px 14px; background: #240a02; }
-    #statusBoard { display: flex; justify-content: space-around; background: rgba(0,0,0,0.6); border: 2px solid #ffd700; border-radius: 12px; padding: 8px; }
-    .status-val { font-size: 20px; font-weight: 900; }
     #machineWrap { background: #855800; padding: 10px; border-radius: 14px; }
     #slotWindow { display: flex; justify-content: space-between; gap: 6px; background: #000; padding: 6px; border-radius: 8px; height: 140px; overflow: hidden; position: relative; }
     .reel { flex: 1; height: 100%; background: #1a1a1a; border-radius: 6px; overflow: hidden; position: relative; }
@@ -45,39 +49,62 @@
     .sym-photo { width: 80px; height: 80px; border-radius: 50%; background-size: cover; background-position: center; }
     .sym-ok { background-image: url('./ok_photo.png.jpg'); border: 3px solid #ffd700; }
     .sym-bad { background-image: url('./bad_photo.png.jpg'); border: 3px solid #ff3333; }
-    #messageBanner { min-height: 40px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 15px; font-weight: 900; color: #fff86b; background: rgba(0,0,0,0.4); border-radius: 8px; }
+    #messageBanner { min-height: 40px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 14px; font-weight: 900; color: #fff86b; background: rgba(0,0,0,0.4); border-radius: 8px; }
     .bet-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); padding: 5px 12px; border-radius: 999px; }
     .bet-btn { background: #ffd700; color: #402300; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; font-weight: 900; }
-    #spinBtn { width: 100%; border: none; border-radius: 999px; padding: 14px; font-size: 20px; font-weight: 1000; background: #ff4d4d; color: #fff; }
+    #spinBtn { width: 100%; border: none; border-radius: 999px; padding: 13px; font-size: 18px; font-weight: 1000; background: #ff4d4d; color: #fff; }
+
+    /* 5. Baccarat */
+    #baccaratGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; background: radial-gradient(circle at 50% 30%, #064024, #021a0e 85%); border: 3px solid #d4af37; border-radius: 12px; }
+    .bac-header { text-align: center; }
+    .bac-header h2 { margin: 0; color: #ffd700; font-size: 20px; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
+    .bac-table { display: flex; justify-content: space-between; gap: 8px; margin: 10px 0; }
+    .bac-side { flex: 1; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 8px; text-align: center; }
+    .bac-side.player { border-color: #3b82f6; }
+    .bac-side.banker { border-color: #ef4444; }
+    .bac-side-title { font-size: 13px; font-weight: 900; margin-bottom: 6px; }
+    .bac-cards { display: flex; justify-content: center; gap: 4px; min-height: 70px; }
+    .card { width: 44px; height: 64px; background: #fff; color: #000; border-radius: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+    .card.red { color: #d00; }
+    .bac-score { font-size: 18px; font-weight: 900; margin-top: 6px; }
+    .bet-boxes { display: flex; gap: 6px; margin-bottom: 8px; }
+    .bet-box { flex: 1; padding: 10px 4px; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.5); text-align: center; cursor: pointer; }
+    .bet-box.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); transform: scale(1.02); }
+    .bet-box h3 { margin: 0; font-size: 13px; }
+    .bet-box span { font-size: 11px; opacity: 0.8; }
   </style>
 </head>
 <body>
 <div id="app">
+
+  <!-- 메인 메뉴 -->
   <div id="menuScreen" class="screen">
-    <div style="font-size:48px;margin-bottom:6px;">🎮</div>
+    <div style="font-size:42px;margin-bottom:4px;">🎰</div>
     <div class="screenTitle">옥 게임 월드</div>
     <div class="screenText">플레이할 미니게임을 골라보세요!</div>
     <button class="menu-btn btn-green" onclick="startCatchGame()">💎 1. 옥을 잡아라 (터치)</button>
     <button class="menu-btn btn-blue" onclick="startDodgeGame()">🏃 2. 안옼케이를 피해라 (피하기)</button>
     <button class="menu-btn btn-yellow" onclick="startFlappyGame()">🐤 3. 날아라 오케이 (탭 점프)</button>
     <button class="menu-btn btn-red" onclick="startSlotGame()">🎰 4. 마카오 옥 카지노 (슬롯)</button>
+    <button class="menu-btn btn-purple" onclick="startBaccaratGame()">🃏 5. 옥 바카라 (오케이 VS 안옼케이)</button>
   </div>
 
+  <!-- 게임 1: Catch -->
   <div id="catchGameArea" class="hidden">
     <div class="top-bar">
       <div class="pill">💎 <span id="score1">0</span></div>
       <div class="pill">⏱ <span id="time1">30</span>s</div>
     </div>
     <div id="feverBarContainer"><div id="feverBar"></div></div>
-    <div id="combo"></div>
     <div id="catchEndScreen" class="screen hidden">
       <div class="screenTitle">게임 종료!</div>
-      <div class="screenText">최종 점수: <b style="font-size:28px;color:#8cff9e;" id="finalScore1">0</b>점</div>
+      <div class="screenText">최종 점수: <b style="font-size:26px;color:#8cff9e;" id="finalScore1">0</b>점</div>
       <button class="menu-btn btn-green" onclick="startCatchGame()">다시 하기</button>
       <button class="menu-btn btn-back" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
 
+  <!-- 게임 2: Dodge -->
   <div id="dodgeGameArea" class="hidden">
     <div class="top-bar">
       <div class="pill">💎 <span id="score2">0</span>점</div>
@@ -93,6 +120,7 @@
     </div>
   </div>
 
+  <!-- 게임 3: Flappy -->
   <div id="flappyGameArea" class="hidden">
     <div class="top-bar">
       <div class="pill">🚩 통과: <span id="score3">0</span></div>
@@ -101,17 +129,18 @@
     <canvas id="flappyCanvas"></canvas>
     <div id="flappyEndScreen" class="screen hidden">
       <div class="screenTitle" style="color:#ff6b6b;">추락했습니다!</div>
-      <div class="screenText">통과: <b style="font-size:28px;color:#ffd84c;" id="finalScore3">0</b>개</div>
+      <div class="screenText">통과: <b style="font-size:26px;color:#ffd84c;" id="finalScore3">0</b>개</div>
       <button class="menu-btn btn-yellow" onclick="startFlappyGame()">다시 날기</button>
       <button class="menu-btn btn-back" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
 
+  <!-- 게임 4: Slot -->
   <div id="slotGameArea" class="hidden">
-    <h2 style="margin:0;text-align:center;color:#ffd700;font-size:20px;">🎰 MAKAU OK CASINO 🎰</h2>
-    <div id="statusBoard">
-      <div style="text-align:center;"><div style="font-size:11px;color:#ffae66;">보유 칩</div><div class="status-val" id="creditVal">1,000</div></div>
-      <div style="text-align:center;"><div style="font-size:11px;color:#ffae66;">획득 칩</div><div class="status-val" style="color:#72f28b;" id="winVal">0</div></div>
+    <h2 style="margin:0;text-align:center;color:#ffd700;font-size:18px;">🎰 MAKAU OK CASINO 🎰</h2>
+    <div style="display:flex;justify-content:space-around;background:rgba(0,0,0,0.6);border:2px solid #ffd700;border-radius:10px;padding:6px;">
+      <div><span style="font-size:11px;color:#ffae66;">칩: </span><b id="creditVal" style="font-size:18px;">1,000</b></div>
+      <div><span style="font-size:11px;color:#ffae66;">획득: </span><b id="winVal" style="color:#72f28b;font-size:18px;">0</b></div>
     </div>
     <div id="machineWrap">
       <div id="slotWindow">
@@ -131,6 +160,59 @@
       <button class="menu-btn btn-back" style="width:100%;margin-top:6px;padding:8px;" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
+
+  <!-- 게임 5: Baccarat -->
+  <div id="baccaratGameArea" class="hidden">
+    <div class="bac-header">
+      <h2>🃏 OK BACCARAT 🃏</h2>
+      <div style="font-size:12px;color:#a7f3d0;margin-top:2px;">보유 칩: <b id="bacChips" style="color:#ffd700;font-size:16px;">1,000</b></div>
+    </div>
+
+    <div class="bac-table">
+      <!-- Player: 오케이 -->
+      <div class="bac-side player">
+        <div class="bac-side-title" style="color:#60a5fa;">👌 오케이 (PLAYER)</div>
+        <div class="bac-cards" id="playerCards"></div>
+        <div class="bac-score" style="color:#93c5fd;" id="playerScore">-</div>
+      </div>
+      <!-- Banker: 안옼케이 -->
+      <div class="bac-side banker">
+        <div class="bac-side-title" style="color:#f87171;">❌ 안옼케이 (BANKER)</div>
+        <div class="bac-cards" id="bankerCards"></div>
+        <div class="bac-score" style="color:#fca5a5;" id="bankerScore">-</div>
+      </div>
+    </div>
+
+    <div id="bacResultMsg" style="text-align:center;font-weight:bold;font-size:14px;color:#fff86b;min-height:22px;">베팅 구역을 선택하고 DEAL을 누르세요!</div>
+
+    <!-- 베팅 영역 -->
+    <div>
+      <div class="bet-boxes">
+        <div class="bet-box selected" id="betPlayer" onclick="selectBacBet('PLAYER')">
+          <h3 style="color:#60a5fa;">PLAYER</h3>
+          <span>2.0배</span>
+        </div>
+        <div class="bet-box" id="betTie" onclick="selectBacBet('TIE')">
+          <h3 style="color:#4ade80;">TIE (무)</h3>
+          <span>8.0배</span>
+        </div>
+        <div class="bet-box" id="betBanker" onclick="selectBacBet('BANKER')">
+          <h3 style="color:#f87171;">BANKER</h3>
+          <span>1.95배</span>
+        </div>
+      </div>
+
+      <div class="bet-bar" style="margin-bottom:6px;">
+        <button class="bet-btn" onclick="changeBacBet(-50)">-</button>
+        <span style="font-weight:bold;font-size:13px;">베팅액: <b id="bacBetVal" style="color:#ffd700;">100</b></span>
+        <button class="bet-btn" onclick="changeBacBet(50)">+</button>
+      </div>
+
+      <button id="dealBtn" class="menu-btn btn-green" style="margin-bottom:4px;padding:12px;font-size:17px;" onclick="dealBaccarat()">🃏 DEAL (카드 열기)</button>
+      <button class="menu-btn btn-back" style="width:100%;margin-top:2px;padding:8px;" onclick="goToMenu()">메뉴로 가기</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -139,6 +221,7 @@
   const dodgeGameArea = document.getElementById("dodgeGameArea");
   const flappyGameArea = document.getElementById("flappyGameArea");
   const slotGameArea = document.getElementById("slotGameArea");
+  const baccaratGameArea = document.getElementById("baccaratGameArea");
 
   const okImg = new Image(); okImg.src = './ok_photo.png.jpg';
   const badImg = new Image(); badImg.src = './bad_photo.png.jpg';
@@ -152,22 +235,18 @@
       const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
-      if (type === 'jump' || type === 'spin') {
+      if (type === 'card' || type === 'spin' || type === 'jump') {
         osc.frequency.setValueAtTime(350, now); osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
         gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         osc.start(now); osc.stop(now + 0.1);
-      } else if (type === 'pass' || type === 'stop') {
-        osc.frequency.setValueAtTime(523, now); gain.gain.setValueAtTime(0.25, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-        osc.start(now); osc.stop(now + 0.1);
-      } else if (type === 'hit' || type === 'bad') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.linearRampToValueAtTime(60, now + 0.2);
+      } else if (type === 'win') {
+        osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.2);
         gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
         osc.start(now); osc.stop(now + 0.2);
-      } else {
-        osc.frequency.setValueAtTime(659, now); osc.frequency.exponentialRampToValueAtTime(1318, now + 0.15);
-        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-        osc.start(now); osc.stop(now + 0.15);
+      } else if (type === 'lose') {
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(50, now + 0.2);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.start(now); osc.stop(now + 0.2);
       }
     } catch(e) {}
   }
@@ -177,6 +256,7 @@
     dodgeGameArea.classList.add("hidden");
     flappyGameArea.classList.add("hidden");
     slotGameArea.classList.add("hidden");
+    baccaratGameArea.classList.add("hidden");
     menuScreen.classList.add("hidden");
   }
 
@@ -188,12 +268,12 @@
 
   /* 1. Catch */
   let catchTimer = null, catchSpawnTimer = null, feverTimer = null;
-  let score1 = 0, timeLeft1 = 30, combo1 = 0, feverGauge1 = 0, isFever1 = false, catchPlaying = false;
+  let score1 = 0, timeLeft1 = 30, isFever1 = false, catchPlaying = false;
   function startCatchGame() {
     hideAll(); catchGameArea.classList.remove("hidden");
     document.getElementById("catchEndScreen").classList.add("hidden");
     document.querySelectorAll(".catch-target").forEach(el => el.remove());
-    score1 = 0; timeLeft1 = 30; combo1 = 0; feverGauge1 = 0; isFever1 = false; catchPlaying = true;
+    score1 = 0; timeLeft1 = 30; isFever1 = false; catchPlaying = true;
     document.getElementById("score1").innerText = score1; document.getElementById("time1").innerText = timeLeft1;
     document.getElementById("feverBar").style.width = "0%";
     clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer);
@@ -226,31 +306,11 @@
     const removeTimer = setTimeout(() => { if (target.parentElement) target.remove(); }, life);
     target.addEventListener("pointerdown", e => {
       e.stopPropagation(); e.preventDefault(); clearTimeout(removeTimer);
-      hitCatchTarget(type, points); target.remove();
+      score1 = Math.max(0, score1 + points);
+      document.getElementById("score1").innerText = score1;
+      playSound(points > 0 ? 'win' : 'lose');
+      target.remove();
     });
-  }
-  function hitCatchTarget(type, basePoints) {
-    let pts = basePoints;
-    if (type === "target-bad-photo") {
-      combo1 = 0; feverGauge1 = 0; document.getElementById("feverBar").style.width = "0%"; playSound("bad");
-    } else {
-      combo1++; playSound("ok");
-      if (isFever1) pts *= 2;
-      else {
-        feverGauge1 = Math.min(100, feverGauge1 + 20);
-        document.getElementById("feverBar").style.width = feverGauge1 + "%";
-        if (feverGauge1 >= 100) triggerFever1();
-      }
-    }
-    score1 = Math.max(0, score1 + pts); document.getElementById("score1").innerText = score1;
-  }
-  function triggerFever1() {
-    isFever1 = true;
-    let rem = 5000;
-    feverTimer = setInterval(() => {
-      rem -= 100; document.getElementById("feverBar").style.width = (rem / 5000) * 100 + "%";
-      if (rem <= 0) { clearInterval(feverTimer); isFever1 = false; feverGauge1 = 0; document.getElementById("feverBar").style.width = "0%"; }
-    }, 100);
   }
   function endCatchGame() {
     catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer);
@@ -258,10 +318,7 @@
     document.getElementById("finalScore1").innerText = score1;
     document.getElementById("catchEndScreen").classList.remove("hidden");
   }
-  function stopCatchGame() {
-    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer);
-    document.querySelectorAll(".catch-target").forEach(el => el.remove());
-  }
+  function stopCatchGame() { catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer); }
 
   /* 2. Dodge */
   const dodgeCanvas = document.getElementById("dodgeCanvas"); const dodgeCtx = dodgeCanvas.getContext("2d");
@@ -269,8 +326,7 @@
   let dodgePlayer = { x: 0, y: 0, radius: 32, targetX: 0 }, drops2 = [], lastSpawnTime2 = 0;
   function startDodgeGame() {
     hideAll(); dodgeGameArea.classList.remove("hidden"); document.getElementById("dodgeEndScreen").classList.add("hidden");
-    const rect = dodgeGameArea.getBoundingClientRect();
-    dodgeCanvas.width = rect.width; dodgeCanvas.height = rect.height;
+    dodgeCanvas.width = dodgeGameArea.clientWidth; dodgeCanvas.height = dodgeGameArea.clientHeight;
     dodgePlayer.y = dodgeCanvas.height - 65; dodgePlayer.x = dodgeCanvas.width / 2; dodgePlayer.targetX = dodgeCanvas.width / 2;
     score2 = 0; lives2 = 3; survivalSeconds2 = 0; drops2 = []; dodgePlaying = true;
     document.getElementById("score2").innerText = score2; document.getElementById("time2").innerText = survivalSeconds2;
@@ -284,44 +340,34 @@
     if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
     dodgeLoop(performance.now());
   }
-  function handleDodgeMove(clientX) {
-    if (!dodgePlaying) return;
-    const rect = dodgeCanvas.getBoundingClientRect();
-    dodgePlayer.targetX = Math.max(dodgePlayer.radius, Math.min(dodgeCanvas.width - dodgePlayer.radius, clientX - rect.left));
-  }
-  window.addEventListener('pointermove', e => { if (dodgePlaying) handleDodgeMove(e.clientX); });
-  window.addEventListener('touchmove', e => { if (dodgePlaying && e.touches.length > 0) handleDodgeMove(e.touches[0].clientX); }, { passive: false });
-  function spawnDodgeDrop() {
-    const r = Math.random();
-    let type = 'bad', radius = 30, speed = 3.5 + (survivalSeconds2 * 0.08);
-    if (r < 0.25) { type = 'ok_item'; radius = 26; }
-    drops2.push({ x: Math.random() * (dodgeCanvas.width - radius * 2) + radius, y: -radius - 10, radius, speed, type });
-  }
+  window.addEventListener('pointermove', e => { if (dodgePlaying) dodgePlayer.targetX = Math.max(dodgePlayer.radius, Math.min(dodgeCanvas.width - dodgePlayer.radius, e.clientX - dodgeCanvas.getBoundingClientRect().left)); });
   function dodgeLoop(currentTime) {
     if (!dodgePlaying) return;
     dodgePlayer.x += (dodgePlayer.targetX - dodgePlayer.x) * 0.25;
-    if (currentTime - lastSpawnTime2 > Math.max(220, 580 - (survivalSeconds2 * 10))) { spawnDodgeDrop(); lastSpawnTime2 = currentTime; }
+    if (currentTime - lastSpawnTime2 > 350) {
+      const r = Math.random();
+      drops2.push({ x: Math.random() * (dodgeCanvas.width - 60) + 30, y: -40, radius: 28, speed: 3.8 + (survivalSeconds2 * 0.05), type: r < 0.25 ? 'ok_item' : 'bad' });
+      lastSpawnTime2 = currentTime;
+    }
     dodgeCtx.clearRect(0, 0, dodgeCanvas.width, dodgeCanvas.height);
     for (let i = drops2.length - 1; i >= 0; i--) {
       let d = drops2[i]; d.y += d.speed;
-      if (d.y - d.radius > dodgeCanvas.height) { drops2.splice(i, 1); continue; }
+      if (d.y > dodgeCanvas.height + 40) { drops2.splice(i, 1); continue; }
       dodgeCtx.save(); dodgeCtx.translate(d.x, d.y);
       dodgeCtx.beginPath(); dodgeCtx.arc(0, 0, d.radius, 0, Math.PI * 2);
-      if (d.type === 'bad') {
-        dodgeCtx.fillStyle = '#ff3333'; dodgeCtx.fill(); dodgeCtx.clip();
-        if (badImg.complete && badImg.naturalWidth) dodgeCtx.drawImage(badImg, -d.radius, -d.radius, d.radius*2, d.radius*2);
-      } else {
-        dodgeCtx.fillStyle = '#ffe65a'; dodgeCtx.fill(); dodgeCtx.clip();
-        if (okImg.complete && okImg.naturalWidth) dodgeCtx.drawImage(okImg, -d.radius, -d.radius, d.radius*2, d.radius*2);
-      }
+      dodgeCtx.fillStyle = d.type === 'bad' ? '#ff3333' : '#ffe65a'; dodgeCtx.fill(); dodgeCtx.clip();
+      const img = d.type === 'bad' ? badImg : okImg;
+      if (img.complete && img.naturalWidth) dodgeCtx.drawImage(img, -d.radius, -d.radius, d.radius*2, d.radius*2);
       dodgeCtx.restore();
       if (Math.hypot(dodgePlayer.x - d.x, dodgePlayer.y - d.y) < dodgePlayer.radius + d.radius - 6) {
         if (d.type === 'bad') {
-          lives2--; document.getElementById("lives2").innerText = "❤️❤️❤️".slice(0, Math.max(0, lives2)); playSound('hit');
-          if (lives2 <= 0) { endDodgeGame(); return; }
-        } else {
-          score2 += 50; document.getElementById("score2").innerText = score2; playSound('ok');
-        }
+          lives2--; document.getElementById("lives2").innerText = "❤️❤️❤️".slice(0, Math.max(0, lives2)); playSound('lose');
+          if (lives2 <= 0) {
+            dodgePlaying = false; clearInterval(dodgeTimeTimer);
+            document.getElementById("finalTime2").innerText = survivalSeconds2; document.getElementById("finalScore2").innerText = score2;
+            document.getElementById("dodgeEndScreen").classList.remove("hidden"); return;
+          }
+        } else { score2 += 50; document.getElementById("score2").innerText = score2; playSound('win'); }
         drops2.splice(i, 1);
       }
     }
@@ -332,16 +378,7 @@
     dodgeCtx.restore();
     dodgeAnimId = requestAnimationFrame(dodgeLoop);
   }
-  function endDodgeGame() {
-    dodgePlaying = false; clearInterval(dodgeTimeTimer);
-    if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
-    document.getElementById("finalTime2").innerText = survivalSeconds2; document.getElementById("finalScore2").innerText = score2;
-    document.getElementById("dodgeEndScreen").classList.remove("hidden");
-  }
-  function stopDodgeGame() {
-    dodgePlaying = false; clearInterval(dodgeTimeTimer);
-    if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
-  }
+  function stopDodgeGame() { dodgePlaying = false; clearInterval(dodgeTimeTimer); }
 
   /* 3. Flappy */
   const flappyCanvas = document.getElementById("flappyCanvas"); const flappyCtx = flappyCanvas.getContext("2d");
@@ -349,27 +386,22 @@
   let bird = { x: 70, y: 250, radius: 24, vy: 0, gravity: 0.38, jump: -6.5 }, pipes = [], lastPipeSpawn = 0;
   function startFlappyGame() {
     hideAll(); flappyGameArea.classList.remove("hidden"); document.getElementById("flappyEndScreen").classList.add("hidden");
-    const rect = flappyGameArea.getBoundingClientRect();
-    flappyCanvas.width = rect.width; flappyCanvas.height = rect.height;
+    flappyCanvas.width = flappyGameArea.clientWidth; flappyCanvas.height = flappyGameArea.clientHeight;
     score3 = 0; bird.y = flappyCanvas.height / 2; bird.vy = 0; pipes = []; flappyPlaying = true;
     document.getElementById("score3").innerText = score3; document.getElementById("best3").innerText = bestScore3;
     lastPipeSpawn = performance.now();
     if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
     flappyLoop(performance.now());
   }
-  flappyGameArea.addEventListener("pointerdown", e => {
-    if (!flappyPlaying) return;
-    if (e) { e.preventDefault(); e.stopPropagation(); }
-    bird.vy = bird.jump; playSound('jump');
-  });
-  function spawnPipe() {
-    const gap = 160, topHeight = Math.floor(Math.random() * (flappyCanvas.height - gap - 120)) + 60;
-    pipes.push({ x: flappyCanvas.width + 10, width: 60, topHeight, bottomY: topHeight + gap, passed: false });
-  }
+  flappyGameArea.addEventListener("pointerdown", e => { if (flappyPlaying) { bird.vy = bird.jump; playSound('jump'); } });
   function flappyLoop(currentTime) {
     if (!flappyPlaying) return;
     bird.vy += bird.gravity; bird.y += bird.vy;
-    if (currentTime - lastPipeSpawn > 1600) { spawnPipe(); lastPipeSpawn = currentTime; }
+    if (currentTime - lastPipeSpawn > 1600) {
+      const gap = 160, topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 120)) + 60;
+      pipes.push({ x: flappyCanvas.width + 10, width: 60, topHeight: topH, bottomY: topH + gap, passed: false });
+      lastPipeSpawn = currentTime;
+    }
     flappyCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
     for (let i = pipes.length - 1; i >= 0; i--) {
       const p = pipes[i]; p.x -= 2.6;
@@ -380,12 +412,16 @@
         flappyCtx.drawImage(badImg, p.x + 5, p.topHeight - 50, 50, 50);
         flappyCtx.drawImage(badImg, p.x + 5, p.bottomY + 5, 50, 50);
       }
-      if (!p.passed && p.x + p.width < bird.x - bird.radius) {
-        p.passed = true; score3++; document.getElementById("score3").innerText = score3; playSound('pass');
+      if (!p.passed && p.x + p.width < bird.x - bird.radius) { p.passed = true; score3++; document.getElementById("score3").innerText = score3; playSound('win'); }
+      if ((bird.x + bird.radius - 4 > p.x && bird.x - bird.radius + 4 < p.x + p.width) && (bird.y - bird.radius + 4 < p.topHeight || bird.y + bird.radius - 4 > p.bottomY)) {
+        flappyPlaying = false; playSound('lose'); if (score3 > bestScore3) bestScore3 = score3;
+        document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden"); return;
       }
-      if ((bird.x + bird.radius - 4 > p.x && bird.x - bird.radius + 4 < p.x + p.width) && (bird.y - bird.radius + 4 < p.topHeight || bird.y + bird.radius - 4 > p.bottomY)) { endFlappyGame(); return; }
     }
-    if (bird.y + bird.radius > flappyCanvas.height || bird.y - bird.radius < 0) { endFlappyGame(); return; }
+    if (bird.y + bird.radius > flappyCanvas.height || bird.y - bird.radius < 0) {
+      flappyPlaying = false; playSound('lose');
+      document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden"); return;
+    }
     flappyCtx.save(); flappyCtx.translate(bird.x, bird.y);
     flappyCtx.beginPath(); flappyCtx.arc(0, 0, bird.radius, 0, Math.PI * 2);
     flappyCtx.fillStyle = '#ffd84c'; flappyCtx.fill(); flappyCtx.clip();
@@ -393,25 +429,17 @@
     flappyCtx.restore();
     flappyAnimId = requestAnimationFrame(flappyLoop);
   }
-  function endFlappyGame() {
-    flappyPlaying = false; if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
-    playSound('hit'); if (score3 > bestScore3) bestScore3 = score3;
-    document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden");
-  }
-  function stopFlappyGame() { flappyPlaying = false; if (flappyAnimId) cancelAnimationFrame(flappyAnimId); }
+  function stopFlappyGame() { flappyPlaying = false; }
 
   /* 4. Slot */
   let credits = 1000, currentBet = 100, isSpinning = false;
   const SYMBOLS = [
-    { id: 'ok', html: '<div class="sym-photo sym-ok"></div>', weight: 1.5 },
-    { id: 'gem', html: '💎', weight: 2.5 },
-    { id: 'seven', html: '7️⃣', weight: 3 },
-    { id: 'bad', html: '<div class="sym-photo sym-bad"></div>', weight: 2 }
+    { id: 'ok', html: '<div class="sym-photo sym-ok"></div>' },
+    { id: 'gem', html: '💎' },
+    { id: 'seven', html: '7️⃣' },
+    { id: 'bad', html: '<div class="sym-photo sym-bad"></div>' }
   ];
-  function startSlotGame() {
-    hideAll(); slotGameArea.classList.remove("hidden");
-    initReels();
-  }
+  function startSlotGame() { hideAll(); slotGameArea.classList.remove("hidden"); initReels(); }
   function initReels() {
     for (let r = 0; r < 3; r++) {
       const strip = document.getElementById(`strip${r}`);
@@ -419,79 +447,174 @@
       for (let i = 0; i < 20; i++) {
         const sym = SYMBOLS[i % SYMBOLS.length];
         const div = document.createElement('div');
-        div.className = 'symbol';
-        div.innerHTML = sym.html;
-        strip.appendChild(div);
+        div.className = 'symbol'; div.innerHTML = sym.html; strip.appendChild(div);
       }
       strip.style.transform = `translateY(0px)`;
     }
   }
-  function changeBet(amount) {
-    if (isSpinning) return;
-    currentBet = Math.max(50, Math.min(credits, currentBet + amount));
-    if (credits === 0) currentBet = 0;
-    document.getElementById('betVal').innerText = currentBet;
-  }
+  function changeBet(a) { if (!isSpinning) { currentBet = Math.max(50, Math.min(credits, currentBet + a)); document.getElementById('betVal').innerText = currentBet; } }
   function spinSlot() {
-    if (isSpinning) return;
-    if (credits < currentBet || currentBet <= 0) {
-      if (credits <= 0) {
-        credits = 500; currentBet = 100;
-        document.getElementById('creditVal').innerText = credits.toLocaleString();
-        document.getElementById('betVal').innerText = currentBet;
-        document.getElementById('messageBanner').innerText = "💸 파산 지원금 500 칩 지급!";
-        return;
-      }
-      document.getElementById('messageBanner').innerText = "칩이 부족합니다!";
-      return;
-    }
+    if (isSpinning || credits < currentBet) return;
     isSpinning = true; credits -= currentBet;
     document.getElementById('creditVal').innerText = credits.toLocaleString();
-    document.getElementById('winVal').innerText = "0";
-    document.getElementById('spinBtn').disabled = true;
-
     const results = [SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)], SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)], SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)]];
     for (let r = 0; r < 3; r++) {
       const strip = document.getElementById(`strip${r}`);
       strip.children[19].innerHTML = results[r].html;
-      strip.style.transition = 'none';
-      strip.style.transform = 'translateY(0px)';
+      strip.style.transition = 'none'; strip.style.transform = 'translateY(0px)';
       setTimeout(() => {
-        playSound('spin');
+        playSound('card');
         strip.style.transition = `transform ${1.4 + r * 0.4}s cubic-bezier(0.1, 0.9, 0.2, 1)`;
         strip.style.transform = `translateY(${-(19) * 128 + 6}px)`;
       }, 40);
-      setTimeout(() => playSound('stop'), (1.4 + r * 0.4) * 1000);
     }
     setTimeout(() => {
-      evaluateSlot(results);
+      const ids = results.map(r => r.id);
+      let mult = 0;
+      if (ids[0] === ids[1] && ids[1] === ids[2]) {
+        if (ids[0] === 'ok') mult = 30; else if (ids[0] === 'gem') mult = 15; else if (ids[0] === 'seven') mult = 10;
+        playSound('win');
+      } else if (ids.includes('ok')) { mult = 1.5; playSound('win'); } else { playSound('lose'); }
+      const win = Math.floor(currentBet * mult); credits += win;
+      document.getElementById('creditVal').innerText = credits.toLocaleString();
+      document.getElementById('winVal').innerText = win.toLocaleString();
       isSpinning = false;
-      document.getElementById('spinBtn').disabled = false;
     }, 2600);
   }
-  function evaluateSlot(res) {
-    const ids = res.map(r => r.id);
-    let mult = 0, msg = "";
-    if (ids[0] === ids[1] && ids[1] === ids[2]) {
-      if (ids[0] === 'ok') { mult = 30; msg = "👑 ULTRA JACKPOT! 다 OK! 👑"; playSound('ok'); }
-      else if (ids[0] === 'gem') { mult = 15; msg = "💎 대박! 옥 보석 3개! 💎"; playSound('ok'); }
-      else if (ids[0] === 'seven') { mult = 10; msg = "7️⃣ 럭키 세븐 3개 완성! 7️⃣"; playSound('ok'); }
-      else if (ids[0] === 'bad') {
-        const pen = currentBet * 2; credits = Math.max(0, credits - pen);
-        document.getElementById('creditVal').innerText = credits.toLocaleString();
-        playSound('bad'); document.getElementById('messageBanner').innerText = `❌ 3 안옼케이! -${pen} 칩 몰수!`;
+
+  /* 5. Baccarat */
+  let bacCredits = 1000, bacBet = 100, selectedBet = 'PLAYER', bacDealing = false;
+  const SUITS = ['♠', '♥', '♦', '♣'];
+  const VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+  function startBaccaratGame() {
+    hideAll(); baccaratGameArea.classList.remove("hidden");
+    document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
+    document.getElementById('bacBetVal').innerText = bacBet;
+    document.getElementById('playerCards').innerHTML = '';
+    document.getElementById('bankerCards').innerHTML = '';
+    document.getElementById('playerScore').innerText = '-';
+    document.getElementById('bankerScore').innerText = '-';
+  }
+
+  function selectBacBet(type) {
+    if (bacDealing) return;
+    selectedBet = type;
+    document.querySelectorAll('.bet-box').forEach(el => el.classList.remove('selected'));
+    document.getElementById(type === 'PLAYER' ? 'betPlayer' : (type === 'BANKER' ? 'betBanker' : 'betTie')).classList.add('selected');
+    playSound('card');
+  }
+
+  function changeBacBet(a) {
+    if (bacDealing) return;
+    bacBet = Math.max(50, Math.min(bacCredits, bacBet + a));
+    document.getElementById('bacBetVal').innerText = bacBet;
+  }
+
+  function getCardValue(valStr) {
+    if (['10', 'J', 'Q', 'K'].includes(valStr)) return 0;
+    if (valStr === 'A') return 1;
+    return parseInt(valStr);
+  }
+
+  function createCardElement(card) {
+    const div = document.createElement('div');
+    div.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : ''}`;
+    div.innerHTML = `<div>${card.suit}</div><div>${card.val}</div>`;
+    return div;
+  }
+
+  function dealBaccarat() {
+    if (bacDealing) return;
+    if (bacCredits < bacBet || bacBet <= 0) {
+      if (bacCredits <= 0) {
+        bacCredits = 500; bacBet = 100;
+        document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
+        document.getElementById('bacResultMsg').innerText = "💸 파산 지원금 500 칩 지급!";
         return;
       }
-    } else if (ids.includes('ok')) {
-      mult = ids.filter(id => id === 'ok').length === 2 ? 3 : 1.2;
-      msg = `👌 오케이 보너스 당첨!`; playSound('ok');
-    } else { msg = "아쉽네요! 다음 기회에... 🥲"; }
-    const win = Math.floor(currentBet * mult);
-    credits += win;
-    document.getElementById('creditVal').innerText = credits.toLocaleString();
-    document.getElementById('winVal').innerText = win.toLocaleString();
-    document.getElementById('messageBanner').innerText = msg;
-    if (credits === 0) document.getElementById('messageBanner').innerText = "💸 파산! 버튼을 누르면 무료 충전됩니다.";
+      document.getElementById('bacResultMsg').innerText = "칩이 부족합니다!";
+      return;
+    }
+
+    bacDealing = true;
+    bacCredits -= bacBet;
+    document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
+    document.getElementById('bacResultMsg').innerText = "카드를 배분 중입니다...";
+
+    const pCardsEl = document.getElementById('playerCards');
+    const bCardsEl = document.getElementById('bankerCards');
+    pCardsEl.innerHTML = ''; bCardsEl.innerHTML = '';
+
+    const draw = () => ({ suit: SUITS[Math.floor(Math.random()*4)], val: VALUES[Math.floor(Math.random()*13)] });
+
+    const p1 = draw(), p2 = draw();
+    const b1 = draw(), b2 = draw();
+
+    setTimeout(() => { pCardsEl.appendChild(createCardElement(p1)); playSound('card'); }, 200);
+    setTimeout(() => { bCardsEl.appendChild(createCardElement(b1)); playSound('card'); }, 500);
+    setTimeout(() => { pCardsEl.appendChild(createCardElement(p2)); playSound('card'); }, 800);
+    setTimeout(() => {
+      bCardsEl.appendChild(createCardElement(b2)); playSound('card');
+
+      let pScore = (getCardValue(p1.val) + getCardValue(p2.val)) % 10;
+      let bScore = (getCardValue(b1.val) + getCardValue(b2.val)) % 10;
+
+      document.getElementById('playerScore').innerText = pScore;
+      document.getElementById('bankerScore').innerText = bScore;
+
+      // 바카라 3번째 카드 룰 (간소화)
+      if (pScore <= 5) {
+        const p3 = draw();
+        setTimeout(() => {
+          pCardsEl.appendChild(createCardElement(p3));
+          pScore = (pScore + getCardValue(p3.val)) % 10;
+          document.getElementById('playerScore').innerText = pScore;
+          playSound('card');
+        }, 600);
+      }
+
+      if (bScore <= 5) {
+        const b3 = draw();
+        setTimeout(() => {
+          bCardsEl.appendChild(createCardElement(b3));
+          bScore = (bScore + getCardValue(b3.val)) % 10;
+          document.getElementById('bankerScore').innerText = bScore;
+          playSound('card');
+        }, 1100);
+      }
+
+      setTimeout(() => {
+        let winner = 'TIE';
+        if (pScore > bScore) winner = 'PLAYER';
+        else if (bScore > pScore) winner = 'BANKER';
+
+        let winAmt = 0;
+        let resultText = "";
+
+        if (winner === selectedBet) {
+          playSound('win');
+          if (selectedBet === 'PLAYER') winAmt = bacBet * 2;
+          else if (selectedBet === 'BANKER') winAmt = Math.floor(bacBet * 1.95);
+          else winAmt = bacBet * 8;
+
+          bacCredits += winAmt;
+          resultText = `🎉 [${winner} 승리!] +${winAmt} 칩 획득! 🎉`;
+        } else if (winner === 'TIE') {
+          bacCredits += bacBet; // 무승부 시 베팅금 반환
+          resultText = "🤝 무승부(TIE) - 베팅 칩 반환!";
+          playSound('card');
+        } else {
+          playSound('lose');
+          resultText = `😭 [${winner} 승리] 베팅 실패!`;
+        }
+
+        document.getElementById('bacChips').innerText = bacCredits.toLocaleString();
+        document.getElementById('bacResultMsg').innerText = resultText;
+        bacDealing = false;
+      }, 1600);
+
+    }, 1100);
   }
 </script>
 </body>
