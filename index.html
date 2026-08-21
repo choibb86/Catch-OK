@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>옥을 잡아라! Catch the OK (Pro)</title>
+  <title>옥을 잡아라! Catch the OK</title>
+
+  <meta property="og:title" content="옥을 잡아라! Catch the OK 👌" />
+  <meta property="og:description" content="오케이 잡고 +50점! 안옼케이 누르면 -100점! 지금 도전하세요 💎" />
 
   <style>
     * {
@@ -140,8 +143,8 @@
 
     .target {
       position: absolute;
-      width: 76px;
-      height: 76px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -151,6 +154,8 @@
       animation: pop .18s ease-out;
       box-shadow: 0 6px 18px rgba(0,0,0,.45);
       z-index: 8;
+      background-size: cover;
+      background-position: center;
     }
 
     .jade {
@@ -168,28 +173,16 @@
       font-size: 26px;
     }
 
-    .ok {
-      background: #f5ff50;
-      border: 4px solid white;
-      color: #0d491d;
-      font-size: 22px;
-      transform: rotate(-8deg);
+    .photo-ok {
+      background-image: url('ok_photo.png');
+      border: 4px solid #fff86b;
+      box-shadow: 0 0 16px rgba(255, 230, 90, 0.7);
     }
 
-    .bad {
-      background: radial-gradient(circle at 35% 25%, #ff7b7b, #e92626 50%, #6e0000);
-      border: 4px solid #fff;
-      color: #fff;
-      font-size: 16px;
-      text-align: center;
-      line-height: 1.1;
-      transform: rotate(7deg);
-    }
-
-    .bomb {
-      background: radial-gradient(circle at 35% 25%, #666, #222 50%, #000);
-      border: 4px solid #ff4444;
-      font-size: 28px;
+    .photo-bad {
+      background-image: url('bad_photo.png');
+      border: 4px solid #ff2222;
+      box-shadow: 0 0 16px rgba(255, 34, 34, 0.7);
     }
 
     @keyframes pop {
@@ -223,14 +216,14 @@
       flex-direction: column;
       padding: 24px;
       text-align: center;
-      background: rgba(4, 12, 7, .92);
+      background: rgba(4, 12, 7, .94);
       backdrop-filter: blur(8px);
     }
 
     #endScreen { display: none; }
 
     .bigEmoji { font-size: 68px; margin-bottom: 8px; }
-    .screenTitle { font-size: 34px; font-weight: 900; margin-bottom: 8px; }
+    .screenTitle { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
     .screenText { font-size: 15px; line-height: 1.6; opacity: .9; margin-bottom: 20px; }
 
     button {
@@ -283,15 +276,15 @@
   <div id="combo"></div>
 
   <div id="startScreen">
-    <div class="bigEmoji">💎</div>
+    <div class="bigEmoji">👌</div>
     <div class="screenTitle">옥을 잡아라!</div>
     <div class="screenText">
       옥(玉) = +10점 💎 | 황금옥 = +30점 ✨<br>
-      OK! = +20점 👌 | 안옼케이 = -20점 ❌<br>
-      💣 폭탄 = -50점 및 피버 초기화<br><br>
-      연속으로 맞히면 <b>FEVER 타임 (점수 2배)</b> 발동!
+      <b>오케이 사진 = +50점 👌</b><br>
+      <span style="color:#ff6b6b;"><b>안옼케이 사진 = -100점 ❌</b></span><br><br>
+      연속 콤보로 <b>피버 모드(점수 2배)</b>를 노려보세요!
     </div>
-    <button onclick="startGame()">도전 시작 👌</button>
+    <button onclick="startGame()">게임 시작 👌</button>
   </div>
 
   <div id="endScreen">
@@ -299,10 +292,10 @@
     <div class="screenTitle" id="resultTitle">게임 종료!</div>
     <div class="screenText">
       최종 점수<br>
-      <b style="font-size:40px;color:#8cff9e;" id="finalScore">0</b> 점
+      <b style="font-size:42px;color:#8cff9e;" id="finalScore">0</b> 점
       <div id="resultComment" style="margin-top:14px;"></div>
     </div>
-    <button onclick="startGame()">다시 잡기</button>
+    <button onclick="startGame()">다시 도전하기</button>
   </div>
 </div>
 
@@ -325,7 +318,6 @@
   let playing = false;
   let audioCtx = null;
 
-  // Web Audio 효과음 (외부 리소스 없이 작동)
   function playSound(type) {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -342,35 +334,27 @@
     const now = audioCtx.currentTime;
 
     if (type === "jade") {
-      osc.frequency.setValueAtTime(523.25, now); // C5
-      osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.08); // G5
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.08);
       gain.gain.setValueAtTime(0.25, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
       osc.start(now);
       osc.stop(now + 0.1);
-    } else if (type === "gold") {
-      osc.frequency.setValueAtTime(659.25, now); // E5
-      osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.15); // C6
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-      osc.start(now);
-      osc.stop(now + 0.18);
-    } else if (type === "bad") {
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(200, now);
-      osc.frequency.linearRampToValueAtTime(90, now + 0.15);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-      osc.start(now);
-      osc.stop(now + 0.15);
-    } else if (type === "bomb") {
-      osc.type = "square";
-      osc.frequency.setValueAtTime(120, now);
-      osc.frequency.linearRampToValueAtTime(40, now + 0.25);
+    } else if (type === "gold" || type === "photo-ok") {
+      osc.frequency.setValueAtTime(659.25, now);
+      osc.frequency.exponentialRampToValueAtTime(1318.51, now + 0.18);
       gain.gain.setValueAtTime(0.35, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
       osc.start(now);
-      osc.stop(now + 0.25);
+      osc.stop(now + 0.2);
+    } else if (type === "photo-bad") {
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.linearRampToValueAtTime(50, now + 0.3);
+      gain.gain.setValueAtTime(0.4, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.start(now);
+      osc.stop(now + 0.3);
     } else if (type === "fever") {
       osc.frequency.setValueAtTime(440, now);
       osc.frequency.exponentialRampToValueAtTime(880, now + 0.25);
@@ -400,14 +384,13 @@
     updateFeverUI();
 
     clearInterval(timer);
-    clearInterval(spawnTimer);
-    clearTimeout(feverTimer);
+    clearTimeout(spawnTimer);
+    clearInterval(feverTimer);
 
     timer = setInterval(() => {
       timeLeft--;
       timeEl.innerText = timeLeft;
 
-      // 난이도 상승 (시간에 따른 스폰 속도 조절)
       const currentLevel = Math.min(4, Math.floor((30 - timeLeft) / 8) + 1);
       levelEl.innerText = currentLevel;
 
@@ -441,28 +424,24 @@
     let points = 10;
     let text = "玉";
 
-    if (r < 0.12) {
+    if (r < 0.18) {
+      type = "photo-ok";
+      points = 50;
+      text = "";
+    } else if (r < 0.33) {
+      type = "photo-bad";
+      points = -100;
+      text = "";
+    } else if (r < 0.48) {
       type = "gold";
       points = 30;
       text = "玉✨";
-    } else if (r < 0.26) {
-      type = "ok";
-      points = 20;
-      text = "OK!";
-    } else if (r < 0.38) {
-      type = "bad";
-      points = -20;
-      text = "안옼\n케이";
-    } else if (r < 0.44 && (30 - timeLeft) > 6) {
-      type = "bomb";
-      points = -50;
-      text = "💣";
     }
 
     target.classList.add(type);
     target.innerText = text;
 
-    const size = 76;
+    const size = 82;
     const maxX = game.clientWidth - size - 16;
     const minY = 160;
     const maxY = game.clientHeight - size - 40;
@@ -472,12 +451,12 @@
 
     game.appendChild(target);
 
-    const life = type === "gold" ? 750 : (type === "bomb" ? 1200 : 950);
+    const life = type === "photo-ok" ? 800 : (type === "photo-bad" ? 1100 : 950);
 
     const removeTimer = setTimeout(() => {
       if (target.parentElement) {
         target.remove();
-        if (type !== "bad" && type !== "bomb") {
+        if (type !== "photo-bad") {
           combo = 0;
           updateCombo();
         }
@@ -500,19 +479,13 @@
   function hitTarget(type, basePoints, x, y) {
     let finalPoints = basePoints;
 
-    if (type === "bad" || type === "bomb") {
+    if (type === "photo-bad") {
       combo = 0;
       feverGauge = 0;
       updateFeverUI();
       playSound(type);
-
-      if (type === "bomb") {
-        showFloatingText("폭탄! -50 💥", x, y, "#ff3333");
-        vibrate([100, 50, 100]);
-      } else {
-        showFloatingText("안옼케이! -20 😭", x, y, "#ff6b6b");
-        vibrate([60, 40, 60]);
-      }
+      showFloatingText("안옼케이! -100 😭", x, y, "#ff2222");
+      vibrate([100, 50, 100]);
     } else {
       combo++;
       playSound(type);
@@ -520,15 +493,15 @@
       if (isFever) {
         finalPoints *= 2;
       } else {
-        feverGauge = Math.min(100, feverGauge + 15);
+        feverGauge = Math.min(100, feverGauge + (type === "photo-ok" ? 25 : 15));
         updateFeverUI();
         if (feverGauge >= 100) triggerFever();
       }
 
-      if (type === "gold") {
-        showFloatingText(`황금옥! +${finalPoints} ✨`, x, y, "#ffe65a");
-      } else if (type === "ok") {
-        showFloatingText(`OK! +${finalPoints} 👌`, x, y, "#dcff48");
+      if (type === "photo-ok") {
+        showFloatingText(`모든게 OK! +${finalPoints} 👌`, x, y, "#ffe65a");
+      } else if (type === "gold") {
+        showFloatingText(`황금옥! +${finalPoints} ✨`, x, y, "#ffd84c");
       } else {
         showFloatingText(`옥! +${finalPoints} 💎`, x, y, "#80ff9a");
       }
@@ -601,16 +574,16 @@
     let comment = "옥 맛을 조금 아시는군요! 👌";
     let emoji = "👌";
 
-    if (score < 150) {
+    if (score < 200) {
       title = "안옼케이...";
-      comment = "옥이 손가락 사이로 빠져나갔습니다 😭";
+      comment = "안옼케이를 너무 많이 누르셨어요 😭";
       emoji = "🥲";
-    } else if (score >= 450) {
+    } else if (score >= 600) {
       title = "완전 옥케이 황제!";
       comment = "초고수의 피버 컨트롤! 마카오 진출 완료 🎰";
       emoji = "👑";
       triggerConfetti();
-    } else if (score >= 280) {
+    } else if (score >= 380) {
       title = "옥부자 탄생";
       comment = "손이 보이지 않는 순발력! 💎";
       emoji = "💎";
