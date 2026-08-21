@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>옥 게임 월드! 5 in 1</title>
-  <meta property="og:title" content="옥 게임 월드! 5종 종합 파티 🎰🃏" />
-  <meta property="og:description" content="옥 잡기, 피하기, 플래피, 슬롯머신, 그리고 블록버스터 바카라까지!" />
+  <meta property="og:title" content="옥 게임 월드! 5종 종합 파티 🎰🐟" />
+  <meta property="og:description" content="옥 잡기, 피하기, 헤엄치는 옥메기, 슬롯머신, 그리고 바카라까지!" />
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
     body { margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; background: #0a0200; color: #ffffff; overflow: hidden; }
@@ -38,6 +38,7 @@
     /* 2 & 3: Canvas */
     #dodgeGameArea, #flappyGameArea { position: absolute; inset: 0; }
     #dodgeCanvas, #flappyCanvas { width: 100%; height: 100%; display: block; }
+    #flappyCanvas { background: radial-gradient(circle at 50% 30%, #0d3b66, #051622 90%); }
 
     /* 4. Slot */
     #slotGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 18px 14px; background: #240a02; }
@@ -54,43 +55,31 @@
     .bet-btn { background: #ffd700; color: #402300; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; font-weight: 900; }
     #spinBtn { width: 100%; border: none; border-radius: 999px; padding: 13px; font-size: 18px; font-weight: 1000; background: #ff4d4d; color: #fff; }
 
-    /* 5. Blockbuster Baccarat */
+    /* 5. Baccarat */
     #baccaratGameArea { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 12px 14px; background: radial-gradient(circle at 50% 30%, #064024, #021a0e 85%); border: 3px solid #d4af37; border-radius: 12px; }
-    
-    /* 딜러 구역 */
     .dealer-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(0,0,0,0.5); border-radius: 12px; padding: 6px 10px; border: 1px solid rgba(255,215,0,0.3); }
-    .dealer-avatar { width: 50px; height: 50px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid #ffd700; flex-shrink: 0; transition: transform .3s; }
-    .dealer-speech { background: #fff; color: #111; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; position: relative; max-width: 250px; text-align: left; box-shadow: 0 3px 8px rgba(0,0,0,0.5); }
+    .dealer-avatar { width: 50px; height: 50px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid #ffd700; flex-shrink: 0; }
+    .dealer-speech { background: #fff; color: #111; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; position: relative; max-width: 250px; text-align: left; }
     .dealer-speech::after { content:''; position: absolute; left: -6px; top: 16px; border-width: 6px 6px 6px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
-
-    /* 배틀 테이블 */
     .bac-table { display: flex; justify-content: space-between; gap: 8px; margin: 4px 0; }
-    .bac-side { flex: 1; background: rgba(0,0,0,0.45); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 6px 4px; text-align: center; display: flex; flex-direction: column; align-items: center; position: relative; transition: border-color .3s, box-shadow .3s; }
+    .bac-side { flex: 1; background: rgba(0,0,0,0.45); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 6px 4px; text-align: center; display: flex; flex-direction: column; align-items: center; }
     .bac-side.player { border-color: #3b82f6; }
     .bac-side.banker { border-color: #ef4444; }
-    
-    .bac-avatar { width: 52px; height: 52px; border-radius: 50%; background-size: cover; background-position: center; margin-bottom: 4px; border: 3px solid #666; transition: transform .3s, border-color .3s, box-shadow .3s; }
+    .bac-avatar { width: 52px; height: 52px; border-radius: 50%; background-size: cover; background-position: center; margin-bottom: 4px; border: 3px solid #666; }
     .avatar-ok { background-image: url('./ok_photo.png.jpg'); }
     .avatar-bad { background-image: url('./bad_photo.png.jpg'); }
-    
-    /* 점수별 후광/절망 상태 */
     .glowing { border-color: #ffd700 !important; box-shadow: 0 0 16px #ffd700 !important; transform: scale(1.1) !important; }
     .despair { filter: grayscale(100%) brightness(0.6); transform: scale(0.95); }
-
     .bac-side-title { font-size: 12px; font-weight: 900; margin-bottom: 4px; }
     .bac-cards { display: flex; justify-content: center; gap: 4px; min-height: 60px; }
-    .card { width: 38px; height: 56px; background: #fff; color: #000; border-radius: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: 900; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.4); animation: cardPop .25s ease-out; }
-    @keyframes cardPop { from { transform: scale(0.3) rotate(-15deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
+    .card { width: 38px; height: 56px; background: #fff; color: #000; border-radius: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: 900; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
     .card.red { color: #d00; }
     .bac-score { font-size: 17px; font-weight: 900; margin-top: 3px; }
-
-    /* 3번째 카드 드래곤 컷인 */
     #cutInOverlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 120; opacity: 0; pointer-events: none; transition: opacity .2s; }
     #cutInOverlay.active { opacity: 1; }
     .cutin-face { width: 140px; height: 140px; border-radius: 50%; background-size: cover; background-position: center; border: 5px solid #ffd700; box-shadow: 0 0 35px #ffd700; transform: scale(0.2); transition: transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
     #cutInOverlay.active .cutin-face { transform: scale(1.1); }
-    .cutin-text { margin-top: 14px; font-size: 22px; font-weight: 1000; text-shadow: 0 0 10px #ff0000; letter-spacing: 1px; }
-
+    .cutin-text { margin-top: 14px; font-size: 22px; font-weight: 1000; }
     .bet-boxes { display: flex; gap: 6px; margin-bottom: 6px; }
     .bet-box { flex: 1; padding: 8px 4px; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.5); text-align: center; cursor: pointer; }
     .bet-box.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); transform: scale(1.02); }
@@ -108,7 +97,7 @@
     <div class="screenText">플레이할 미니게임을 골라보세요!</div>
     <button class="menu-btn btn-green" onclick="startCatchGame()">💎 1. 옥을 잡아라 (터치)</button>
     <button class="menu-btn btn-blue" onclick="startDodgeGame()">🏃 2. 안옼케이를 피해라 (피하기)</button>
-    <button class="menu-btn btn-yellow" onclick="startFlappyGame()">🐤 3. 날아라 오케이 (탭 점프)</button>
+    <button class="menu-btn btn-yellow" onclick="startFlappyGame()">🐟 3. 헤엄쳐라 옥메기! (수중 헤엄)</button>
     <button class="menu-btn btn-red" onclick="startSlotGame()">🎰 4. 마카오 옥 카지노 (슬롯)</button>
     <button class="menu-btn btn-purple" onclick="startBaccaratGame()">🃏 5. 옥 바카라 (오케이 VS 안옼케이)</button>
   </div>
@@ -144,7 +133,7 @@
     </div>
   </div>
 
-  <!-- 게임 3: Flappy -->
+  <!-- 게임 3: Flappy Catfish (헤엄쳐라 옥메기!) -->
   <div id="flappyGameArea" class="hidden">
     <div class="top-bar">
       <div class="pill">🚩 통과: <span id="score3">0</span></div>
@@ -152,9 +141,10 @@
     </div>
     <canvas id="flappyCanvas"></canvas>
     <div id="flappyEndScreen" class="screen hidden">
-      <div class="screenTitle" style="color:#ff6b6b;">추락했습니다!</div>
-      <div class="screenText">통과: <b style="font-size:26px;color:#ffd84c;" id="finalScore3">0</b>개</div>
-      <button class="menu-btn btn-yellow" onclick="startFlappyGame()">다시 날기</button>
+      <div style="font-size:48px;margin-bottom:6px;">🐟💀</div>
+      <div class="screenTitle" style="color:#ff6b6b;">옥메기 탈진!</div>
+      <div class="screenText">헤엄쳐 통과한 암초<br><b style="font-size:28px;color:#ffd84c;" id="finalScore3">0</b>개</div>
+      <button class="menu-btn btn-yellow" onclick="startFlappyGame()">다시 헤엄치기 🐟</button>
       <button class="menu-btn btn-back" onclick="goToMenu()">메뉴로 가기</button>
     </div>
   </div>
@@ -185,30 +175,23 @@
     </div>
   </div>
 
-  <!-- 게임 5: Blockbuster Baccarat -->
+  <!-- 게임 5: Baccarat -->
   <div id="baccaratGameArea" class="hidden">
-    
-    <!-- 딜러 구역 (친구 딜러 & 약올리는 말풍선) -->
     <div class="dealer-wrap">
       <div class="dealer-avatar avatar-ok" id="dealerAvatar"></div>
       <div class="dealer-speech" id="dealerSpeech">어디에 걸어볼 텐가? 옥의 직감을 믿어봐 👌</div>
     </div>
-
-    <!-- 3번째 카드 드래곤 컷인 연출 레이어 -->
     <div id="cutInOverlay">
       <div class="cutin-face avatar-ok" id="cutInFace"></div>
       <div class="cutin-text" id="cutInText" style="color:#ffd700;">🔥 오케이의 가호! 3번째 카드! 🔥</div>
     </div>
-
     <div class="bac-table">
-      <!-- Player: 오케이 진영 -->
       <div class="bac-side player" id="sidePlayer">
         <div class="bac-avatar avatar-ok" id="pAvatar"></div>
         <div class="bac-side-title" style="color:#60a5fa;">👌 PLAYER</div>
         <div class="bac-cards" id="playerCards"></div>
         <div class="bac-score" style="color:#93c5fd;" id="playerScore">-</div>
       </div>
-      <!-- Banker: 안옼케이 진영 -->
       <div class="bac-side banker" id="sideBanker">
         <div class="bac-avatar avatar-bad" id="bAvatar"></div>
         <div class="bac-side-title" style="color:#f87171;">❌ BANKER</div>
@@ -216,13 +199,10 @@
         <div class="bac-score" style="color:#fca5a5;" id="bankerScore">-</div>
       </div>
     </div>
-
     <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px;">
       <span style="font-size:12px;color:#a7f3d0;">보유 칩: <b id="bacChips" style="color:#ffd700;font-size:16px;">1,000</b></span>
       <span id="bacResultMsg" style="font-weight:bold;font-size:12px;color:#fff86b;">베팅 후 DEAL을 터치하세요!</span>
     </div>
-
-    <!-- 베팅 영역 -->
     <div>
       <div class="bet-boxes">
         <div class="bet-box selected" id="betPlayer" onclick="selectBacBet('PLAYER')">
@@ -238,13 +218,11 @@
           <span>1.95배</span>
         </div>
       </div>
-
       <div class="bet-bar" style="margin-bottom:6px;">
         <button class="bet-btn" onclick="changeBacBet(-50)">-</button>
         <span style="font-weight:bold;font-size:13px;">베팅액: <b id="bacBetVal" style="color:#ffd700;">100</b></span>
         <button class="bet-btn" onclick="changeBacBet(50)">+</button>
       </div>
-
       <button id="dealBtn" class="menu-btn btn-green" style="margin-bottom:4px;padding:12px;font-size:16px;" onclick="dealBaccarat()">🃏 DEAL (승부 보기)</button>
       <button class="menu-btn btn-back" style="width:100%;margin-top:2px;padding:7px;" onclick="goToMenu()">메뉴로 가기</button>
     </div>
@@ -272,7 +250,12 @@
       const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
-      if (type === 'card' || type === 'spin' || type === 'jump') {
+      if (type === 'swim') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(650, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
+      } else if (type === 'card' || type === 'spin' || type === 'jump') {
         osc.frequency.setValueAtTime(350, now); osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
         gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         osc.start(now); osc.stop(now + 0.1);
@@ -422,55 +405,162 @@
   }
   function stopDodgeGame() { dodgePlaying = false; clearInterval(dodgeTimeTimer); }
 
-  /* 3. Flappy */
+  /* 3. 헤엄쳐라 옥메기! (Catfish Swim) */
   const flappyCanvas = document.getElementById("flappyCanvas"); const flappyCtx = flappyCanvas.getContext("2d");
   let flappyAnimId = null, flappyPlaying = false, score3 = 0, bestScore3 = 0;
-  let bird = { x: 70, y: 250, radius: 24, vy: 0, gravity: 0.38, jump: -6.5 }, pipes = [], lastPipeSpawn = 0;
+  let catfish = { x: 80, y: 250, radius: 24, vy: 0, gravity: 0.35, jump: -6.2, swimPhase: 0 };
+  let pipes = [], bubbles = [], lastPipeSpawn = 0;
+
   function startFlappyGame() {
     hideAll(); flappyGameArea.classList.remove("hidden"); document.getElementById("flappyEndScreen").classList.add("hidden");
     flappyCanvas.width = flappyGameArea.clientWidth; flappyCanvas.height = flappyGameArea.clientHeight;
-    score3 = 0; bird.y = flappyCanvas.height / 2; bird.vy = 0; pipes = []; flappyPlaying = true;
+    score3 = 0; catfish.y = flappyCanvas.height / 2; catfish.vy = 0; catfish.swimPhase = 0;
+    pipes = []; bubbles = []; flappyPlaying = true;
     document.getElementById("score3").innerText = score3; document.getElementById("best3").innerText = bestScore3;
     lastPipeSpawn = performance.now();
     if (flappyAnimId) cancelAnimationFrame(flappyAnimId);
-    flappyLoop(performance.now());
+    catfishLoop(performance.now());
   }
-  flappyGameArea.addEventListener("pointerdown", e => { if (flappyPlaying) { bird.vy = bird.jump; playSound('jump'); } });
-  function flappyLoop(currentTime) {
+
+  flappyGameArea.addEventListener("pointerdown", e => {
+    if (flappyPlaying) {
+      catfish.vy = catfish.jump;
+      playSound('swim');
+      // 헤엄칠 때 물방울 생성
+      for (let i = 0; i < 4; i++) {
+        bubbles.push({
+          x: catfish.x - 20,
+          y: catfish.y + (Math.random() - 0.5) * 15,
+          vx: -(Math.random() * 2 + 1),
+          vy: -(Math.random() * 1.5 + 0.5),
+          r: Math.random() * 4 + 2,
+          life: 1.0
+        });
+      }
+    }
+  });
+
+  function catfishLoop(currentTime) {
     if (!flappyPlaying) return;
-    bird.vy += bird.gravity; bird.y += bird.vy;
-    if (currentTime - lastPipeSpawn > 1600) {
-      const gap = 160, topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 120)) + 60;
-      pipes.push({ x: flappyCanvas.width + 10, width: 60, topHeight: topH, bottomY: topH + gap, passed: false });
+    catfish.vy += catfish.gravity;
+    catfish.y += catfish.vy;
+    catfish.swimPhase += 0.25;
+
+    // 파이프(수중 암초) 생성
+    if (currentTime - lastPipeSpawn > 1650) {
+      const gap = 165, topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 120)) + 60;
+      pipes.push({ x: flappyCanvas.width + 10, width: 64, topHeight: topH, bottomY: topH + gap, passed: false });
       lastPipeSpawn = currentTime;
     }
+
     flappyCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+
+    // 물방울 파티클
+    for (let i = bubbles.length - 1; i >= 0; i--) {
+      let b = bubbles[i];
+      b.x += b.vx; b.y += b.vy; b.life -= 0.03;
+      if (b.life <= 0) { bubbles.splice(i, 1); continue; }
+      flappyCtx.beginPath();
+      flappyCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      flappyCtx.fillStyle = `rgba(255, 255, 255, ${b.life * 0.6})`;
+      flappyCtx.fill();
+    }
+
+    // 수중 암초 기둥 (안옼케이)
     for (let i = pipes.length - 1; i >= 0; i--) {
       const p = pipes[i]; p.x -= 2.6;
       if (p.x + p.width < 0) { pipes.splice(i, 1); continue; }
-      flappyCtx.fillStyle = '#220808'; flappyCtx.fillRect(p.x, 0, p.width, p.topHeight);
+
+      // 위아래 기둥 렌더링
+      flappyCtx.fillStyle = '#1c2d27';
+      flappyCtx.strokeStyle = '#34d399';
+      flappyCtx.lineWidth = 2;
+      flappyCtx.fillRect(p.x, 0, p.width, p.topHeight);
+      flappyCtx.strokeRect(p.x, 0, p.width, p.topHeight);
       flappyCtx.fillRect(p.x, p.bottomY, p.width, flappyCanvas.height - p.bottomY);
+      flappyCtx.strokeRect(p.x, p.bottomY, p.width, flappyCanvas.height - p.bottomY);
+
       if (badImg.complete && badImg.naturalWidth) {
-        flappyCtx.drawImage(badImg, p.x + 5, p.topHeight - 50, 50, 50);
-        flappyCtx.drawImage(badImg, p.x + 5, p.bottomY + 5, 50, 50);
+        flappyCtx.drawImage(badImg, p.x + 8, p.topHeight - 48, 48, 48);
+        flappyCtx.drawImage(badImg, p.x + 8, p.bottomY + 4, 48, 48);
       }
-      if (!p.passed && p.x + p.width < bird.x - bird.radius) { p.passed = true; score3++; document.getElementById("score3").innerText = score3; playSound('win'); }
-      if ((bird.x + bird.radius - 4 > p.x && bird.x - bird.radius + 4 < p.x + p.width) && (bird.y - bird.radius + 4 < p.topHeight || bird.y + bird.radius - 4 > p.bottomY)) {
+
+      if (!p.passed && p.x + p.width < catfish.x - catfish.radius) {
+        p.passed = true; score3++; document.getElementById("score3").innerText = score3; playSound('win');
+      }
+
+      // 충돌 판정
+      if ((catfish.x + catfish.radius - 4 > p.x && catfish.x - catfish.radius + 4 < p.x + p.width) &&
+          (catfish.y - catfish.radius + 4 < p.topHeight || catfish.y + catfish.radius - 4 > p.bottomY)) {
         flappyPlaying = false; playSound('lose'); if (score3 > bestScore3) bestScore3 = score3;
         document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden"); return;
       }
     }
-    if (bird.y + bird.radius > flappyCanvas.height || bird.y - bird.radius < 0) {
+
+    if (catfish.y + catfish.radius > flappyCanvas.height || catfish.y - catfish.radius < 0) {
       flappyPlaying = false; playSound('lose');
       document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden"); return;
     }
-    flappyCtx.save(); flappyCtx.translate(bird.x, bird.y);
-    flappyCtx.beginPath(); flappyCtx.arc(0, 0, bird.radius, 0, Math.PI * 2);
-    flappyCtx.fillStyle = '#ffd84c'; flappyCtx.fill(); flappyCtx.clip();
-    if (okImg.complete && okImg.naturalWidth) flappyCtx.drawImage(okImg, -bird.radius, -bird.radius, bird.radius*2, bird.radius*2);
+
+    // 옥메기 캐릭터 렌더링 (친구 사진 머리 + 메기 몸통 & 수염 & 꼬리)
+    flappyCtx.save();
+    flappyCtx.translate(catfish.x, catfish.y);
+    const angle = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, catfish.vy * 0.08));
+    flappyCtx.rotate(angle);
+
+    const tailWiggle = Math.sin(catfish.swimPhase) * 9;
+
+    // 1. 메기 꼬리지느러미 (물결침)
+    flappyCtx.fillStyle = '#2f5233';
+    flappyCtx.beginPath();
+    flappyCtx.moveTo(-20, 0);
+    flappyCtx.lineTo(-44, -14 + tailWiggle);
+    flappyCtx.lineTo(-38, 0 + tailWiggle);
+    flappyCtx.lineTo(-44, 14 + tailWiggle);
+    flappyCtx.closePath();
+    flappyCtx.fill();
+
+    // 2. 메기 등지느러미
+    flappyCtx.fillStyle = '#416d47';
+    flappyCtx.beginPath();
+    flappyCtx.moveTo(-10, -22);
+    flappyCtx.lineTo(-24, -30);
+    flappyCtx.lineTo(-18, -14);
+    flappyCtx.closePath();
+    flappyCtx.fill();
+
+    // 3. 메기 머리 (친구의 오케이 얼굴 사진)
+    flappyCtx.beginPath();
+    flappyCtx.arc(0, 0, catfish.radius, 0, Math.PI * 2);
+    flappyCtx.fillStyle = '#ffd84c';
+    flappyCtx.shadowColor = '#5eead4';
+    flappyCtx.shadowBlur = 12;
+    flappyCtx.fill();
+    flappyCtx.clip();
+    if (okImg.complete && okImg.naturalWidth) {
+      flappyCtx.drawImage(okImg, -catfish.radius, -catfish.radius, catfish.radius * 2, catfish.radius * 2);
+    }
     flappyCtx.restore();
-    flappyAnimId = requestAnimationFrame(flappyLoop);
+
+    // 4. 메기 긴 수염 (회전 바깥에서 그리기)
+    flappyCtx.save();
+    flappyCtx.translate(catfish.x, catfish.y);
+    flappyCtx.rotate(angle);
+    flappyCtx.strokeStyle = '#1e3822';
+    flappyCtx.lineWidth = 2.5;
+    flappyCtx.beginPath();
+    // 윗수염
+    flappyCtx.moveTo(14, -6);
+    flappyCtx.quadraticCurveTo(28, -16 + tailWiggle * 0.3, 38, -8);
+    // 아랫수염
+    flappyCtx.moveTo(14, 8);
+    flappyCtx.quadraticCurveTo(28, 18 + tailWiggle * 0.3, 38, 12);
+    flappyCtx.stroke();
+    flappyCtx.restore();
+
+    flappyAnimId = requestAnimationFrame(catfishLoop);
   }
+
   function stopFlappyGame() { flappyPlaying = false; }
 
   /* 4. Slot */
@@ -582,38 +672,24 @@
   function updateAvatarReactions(pScore, bScore) {
     const pAvatar = document.getElementById('pAvatar');
     const bAvatar = document.getElementById('bAvatar');
+    if (pScore >= 7) pAvatar.className = 'bac-avatar avatar-ok glowing';
+    else if (pScore <= 3) pAvatar.className = 'bac-avatar avatar-bad despair';
+    else pAvatar.className = 'bac-avatar avatar-ok';
 
-    // 플레이어(오케이) 실시간 표정 & 후광 반응
-    if (pScore >= 7) {
-      pAvatar.className = 'bac-avatar avatar-ok glowing';
-    } else if (pScore <= 3) {
-      pAvatar.className = 'bac-avatar avatar-bad despair';
-    } else {
-      pAvatar.className = 'bac-avatar avatar-ok';
-    }
-
-    // 뱅커(안옼케이) 실시간 표정 & 후광 반응
-    if (bScore >= 7) {
-      bAvatar.className = 'bac-avatar avatar-bad glowing';
-    } else if (bScore <= 3) {
-      bAvatar.className = 'bac-avatar avatar-ok despair';
-    } else {
-      bAvatar.className = 'bac-avatar avatar-bad';
-    }
+    if (bScore >= 7) bAvatar.className = 'bac-avatar avatar-bad glowing';
+    else if (bScore <= 3) bAvatar.className = 'bac-avatar avatar-ok despair';
+    else bAvatar.className = 'bac-avatar avatar-bad';
   }
 
   function showCutIn(type, title, callback) {
     const overlay = document.getElementById('cutInOverlay');
     const face = document.getElementById('cutInFace');
     const text = document.getElementById('cutInText');
-
     face.className = `cutin-face ${type === 'ok' ? 'avatar-ok' : 'avatar-bad'}`;
     text.innerText = title;
     text.style.color = type === 'ok' ? '#ffd700' : '#ff4d4d';
-
     playSound('cutin');
     overlay.classList.add('active');
-
     setTimeout(() => {
       overlay.classList.remove('active');
       setTimeout(callback, 250);
@@ -660,7 +736,6 @@
       document.getElementById('bankerScore').innerText = bScore;
       updateAvatarReactions(pScore, bScore);
 
-      // 내추럴 8, 9가 아니면 3번째 카드 룰 진입
       const isNatural = (pScore >= 8 || bScore >= 8);
 
       const processPlayer3rd = (nextStep) => {
@@ -674,9 +749,7 @@
             playSound('card');
             nextStep(p3);
           });
-        } else {
-          nextStep(null);
-        }
+        } else { nextStep(null); }
       };
 
       const processBanker3rd = (p3, finishStep) => {
@@ -692,15 +765,12 @@
               finishStep();
             });
           }, 300);
-        } else {
-          finishStep();
-        }
+        } else { finishStep(); }
       };
 
       setTimeout(() => {
         processPlayer3rd((p3) => {
           processBanker3rd(p3, () => {
-            // 승패 판정
             setTimeout(() => {
               let winner = 'TIE';
               if (pScore > bScore) winner = 'PLAYER';
@@ -717,8 +787,6 @@
 
                 bacCredits += winAmt;
                 document.getElementById('bacResultMsg').innerText = `🎉 [${winner} 승리!] +${winAmt} 칩 획득!`;
-
-                // 승리 시 딜러 멘트 (언짢은 안옼케이)
                 setDealer('bad', "칫... 운이 좋았군. 다음 판엔 다 털어간다 😤");
               } else if (winner === 'TIE') {
                 bacCredits += bacBet;
@@ -728,8 +796,6 @@
               } else {
                 playSound('lose');
                 document.getElementById('bacResultMsg').innerText = `😭 [${winner} 승리] 베팅 실패!`;
-
-                // 패배 시 딜러 멘트 (약올리는 오케이)
                 const taunts = [
                   "꺼억~ 오늘 야식비 굳었다! 고맙다 친구야 👌",
                   "집까지 걸어가야겠네? ㅋㅋㅋ 💸",
