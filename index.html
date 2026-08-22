@@ -25,15 +25,23 @@
     .pill { background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 6px 12px; color: white; font-size: 13px; font-weight: bold; }
     .top-bar { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; z-index: 20; pointer-events: none; }
 
-    /* 1. Catch */
+    /* 1. Catch (콤보 및 피버 스타일 복구) */
     #catchGameArea { position: absolute; inset: 0; }
-    #feverBarContainer { position: absolute; top: 52px; left: 16px; right: 16px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 20; }
-    #feverBar { width: 0%; height: 100%; background: #ffd84c; }
-    .target { position: absolute; width: 84px; height: 84px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; cursor: pointer; z-index: 8; background-size: cover; background-position: center; }
-    .jade { background: #0c7438; border: 4px solid #fff; color: white; font-size: 28px; }
-    .gold { background: #e08b00; border: 4px solid #fff3a0; color: #5a3700; font-size: 24px; }
-    .target-ok-photo { background-image: url('./ok_photo.png.jpg'); border: 4px solid #fff86b; }
-    .target-bad-photo { background-image: url('./bad_photo.png.jpg'); border: 4px solid #ff2222; }
+    #feverGlow { position: absolute; inset: 0; pointer-events: none; border: 4px solid transparent; z-index: 12; transition: border-color .3s; }
+    .fever-active #feverGlow { border-color: #ffd84c; animation: pulseGlow .6s infinite alternate; }
+    @keyframes pulseGlow { from { box-shadow: inset 0 0 15px #ffb300; } to { box-shadow: inset 0 0 35px #ff4500; } }
+    #feverBarContainer { position: absolute; top: 52px; left: 16px; right: 16px; height: 7px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 20; pointer-events: none; }
+    #feverBar { width: 0%; height: 100%; background: linear-gradient(90deg, #43d46e, #ffe65a, #ff4500); transition: width 0.1s linear; }
+    #combo { position: absolute; top: 105px; width: 100%; text-align: center; font-size: 22px; font-weight: 900; color: #fff86b; z-index: 15; opacity: 0; transform: scale(.7); transition: .12s; text-shadow: 0 2px 6px black; pointer-events: none; }
+    #combo.show { opacity: 1; transform: scale(1); }
+    .target { position: absolute; width: 84px; height: 84px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; cursor: pointer; z-index: 8; background-size: cover; background-position: center; animation: pop .18s ease-out; box-shadow: 0 6px 18px rgba(0,0,0,.45); }
+    .jade { background-color: #0c7438; background-image: radial-gradient(circle at 35% 25%, #d8ffe1, #43d46e 35%, #0c7438 72%); border: 4px solid rgba(255,255,255,.9); color: white; font-size: 28px; text-shadow: 0 2px 4px #06441e; }
+    .gold { background-color: #e08b00; background-image: radial-gradient(circle at 35% 25%, #fffbc7, #ffd84c 35%, #e08b00 75%); border: 4px solid #fff3a0; color: #5a3700; font-size: 24px; }
+    .target-ok-photo { background-image: url('./ok_photo.png.jpg'); border: 4px solid #fff86b; box-shadow: 0 0 16px rgba(255, 230, 90, 0.8); }
+    .target-bad-photo { background-image: url('./bad_photo.png.jpg'); border: 4px solid #ff2222; box-shadow: 0 0 16px rgba(255, 34, 34, 0.8); }
+    @keyframes pop { from { transform: scale(.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .floatText { position: absolute; z-index: 30; font-weight: 900; font-size: 20px; pointer-events: none; animation: floatUp .7s ease-out forwards; text-shadow: 0 2px 4px black; }
+    @keyframes floatUp { 0% { transform: translateY(0) scale(.7); opacity: 0; } 20% { opacity: 1; transform: translateY(-10px) scale(1.15); } 100% { opacity: 0; transform: translateY(-65px) scale(1); } }
 
     /* 2 & 3: Canvas */
     #dodgeGameArea, #flappyGameArea { position: absolute; inset: 0; }
@@ -104,11 +112,13 @@
 
   <!-- 게임 1: Catch -->
   <div id="catchGameArea" class="hidden">
+    <div id="feverGlow"></div>
     <div class="top-bar">
       <div class="pill">💎 <span id="score1">0</span></div>
       <div class="pill">⏱ <span id="time1">30</span>s</div>
     </div>
     <div id="feverBarContainer"><div id="feverBar"></div></div>
+    <div id="combo"></div>
     <div id="catchEndScreen" class="screen hidden">
       <div class="screenTitle">게임 종료!</div>
       <div class="screenText">최종 점수: <b style="font-size:26px;color:#8cff9e;" id="finalScore1">0</b>점</div>
@@ -269,7 +279,8 @@
         gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
         osc.start(now); osc.stop(now + 0.25);
       } else if (type === 'lose') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(50, now + 0.25);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(50, now + 0.25);
         gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
         osc.start(now); osc.stop(now + 0.25);
       }
@@ -291,16 +302,20 @@
     menuScreen.classList.remove("hidden");
   }
 
-  /* 1. Catch */
+  /* 1. Catch (콤보/피버 복구 완료) */
   let catchTimer = null, catchSpawnTimer = null, feverTimer = null;
-  let score1 = 0, timeLeft1 = 30, isFever1 = false, catchPlaying = false;
+  let score1 = 0, timeLeft1 = 30, combo1 = 0, feverGauge1 = 0, isFever1 = false, catchPlaying = false;
+  
   function startCatchGame() {
     hideAll(); catchGameArea.classList.remove("hidden");
     document.getElementById("catchEndScreen").classList.add("hidden");
     document.querySelectorAll(".catch-target").forEach(el => el.remove());
-    score1 = 0; timeLeft1 = 30; isFever1 = false; catchPlaying = true;
+    score1 = 0; timeLeft1 = 30; combo1 = 0; feverGauge1 = 0; isFever1 = false; catchPlaying = true;
     document.getElementById("score1").innerText = score1; document.getElementById("time1").innerText = timeLeft1;
     document.getElementById("feverBar").style.width = "0%";
+    catchGameArea.classList.remove("fever-active");
+    updateCombo1();
+
     clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer);
     catchTimer = setInterval(() => {
       timeLeft1--; document.getElementById("time1").innerText = timeLeft1;
@@ -308,11 +323,13 @@
     }, 1000);
     runCatchSpawner();
   }
+
   function runCatchSpawner() {
     if (!catchPlaying) return;
     spawnCatchTarget();
     catchSpawnTimer = setTimeout(runCatchSpawner, Math.max(260, 520 - ((30 - timeLeft1) * 8)));
   }
+
   function spawnCatchTarget() {
     if (!catchPlaying) return;
     const target = document.createElement("div");
@@ -327,23 +344,99 @@
     target.style.left = Math.floor(Math.random() * Math.max(1, catchGameArea.clientWidth - size - 16)) + 16 + "px";
     target.style.top = Math.floor(Math.random() * Math.max(1, catchGameArea.clientHeight - size - 100)) + 70 + "px";
     catchGameArea.appendChild(target);
+
     const life = type === "target-ok-photo" ? 850 : 1000;
-    const removeTimer = setTimeout(() => { if (target.parentElement) target.remove(); }, life);
+    const removeTimer = setTimeout(() => {
+      if (target.parentElement) {
+        target.remove();
+        if (type !== "target-bad-photo") {
+          combo1 = 0;
+          updateCombo1();
+        }
+      }
+    }, life);
+
     target.addEventListener("pointerdown", e => {
       e.stopPropagation(); e.preventDefault(); clearTimeout(removeTimer);
-      score1 = Math.max(0, score1 + points);
-      document.getElementById("score1").innerText = score1;
-      playSound(points > 0 ? 'win' : 'lose');
+      const rect = target.getBoundingClientRect();
+      const areaRect = catchGameArea.getBoundingClientRect();
+      hitCatchTarget(type, points, rect.left - areaRect.left + 20, rect.top - areaRect.top);
       target.remove();
     });
   }
+
+  function hitCatchTarget(type, basePoints, x, y) {
+    let finalPoints = basePoints;
+    if (type === "target-bad-photo") {
+      combo1 = 0; feverGauge1 = 0;
+      document.getElementById("feverBar").style.width = "0%";
+      playSound("lose");
+      showFloatText(catchGameArea, "안옼케이! -100 😭", x, y, "#ff2222");
+    } else {
+      combo1++;
+      playSound(type === "target-ok-photo" ? "win" : "card");
+      if (isFever1) {
+        finalPoints *= 2;
+      } else {
+        feverGauge1 = Math.min(100, feverGauge1 + (type === "target-ok-photo" ? 25 : 15));
+        document.getElementById("feverBar").style.width = feverGauge1 + "%";
+        if (feverGauge1 >= 100) triggerFever1();
+      }
+      if (type === "target-ok-photo") showFloatText(catchGameArea, `모든게 OK! +${finalPoints} 👌`, x, y, "#ffe65a");
+      else if (type === "gold") showFloatText(catchGameArea, `황금옥! +${finalPoints} ✨`, x, y, "#ffd84c");
+      else showFloatText(catchGameArea, `옥! +${finalPoints} 💎`, x, y, "#80ff9a");
+    }
+    score1 = Math.max(0, score1 + finalPoints);
+    document.getElementById("score1").innerText = score1;
+    updateCombo1();
+  }
+
+  function triggerFever1() {
+    isFever1 = true;
+    catchGameArea.classList.add("fever-active");
+    showFloatText(catchGameArea, "🔥 FEVER 2X! 🔥", catchGameArea.clientWidth / 2 - 70, 180, "#ffd84c");
+    let rem = 5000;
+    feverTimer = setInterval(() => {
+      rem -= 100;
+      document.getElementById("feverBar").style.width = (rem / 5000) * 100 + "%";
+      if (rem <= 0) {
+        clearInterval(feverTimer);
+        isFever1 = false;
+        feverGauge1 = 0;
+        document.getElementById("feverBar").style.width = "0%";
+        catchGameArea.classList.remove("fever-active");
+      }
+    }, 100);
+  }
+
+  function updateCombo1() {
+    const comboEl = document.getElementById("combo");
+    if (combo1 >= 3) {
+      comboEl.innerText = `${combo1} COMBO! 🔥`;
+      comboEl.classList.add("show");
+    } else {
+      comboEl.classList.remove("show");
+    }
+  }
+
+  function showFloatText(parent, text, x, y, color) {
+    const el = document.createElement("div");
+    el.className = "floatText";
+    el.innerText = text;
+    el.style.left = Math.max(10, Math.min(parent.clientWidth - 140, x)) + "px";
+    el.style.top = y + "px";
+    el.style.color = color;
+    parent.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  }
+
   function endCatchGame() {
-    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer);
+    catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer);
     document.querySelectorAll(".catch-target").forEach(el => el.remove());
     document.getElementById("finalScore1").innerText = score1;
     document.getElementById("catchEndScreen").classList.remove("hidden");
   }
-  function stopCatchGame() { catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer); }
+  function stopCatchGame() { catchPlaying = false; clearInterval(catchTimer); clearTimeout(catchSpawnTimer); clearInterval(feverTimer); }
 
   /* 2. Dodge */
   const dodgeCanvas = document.getElementById("dodgeCanvas"); const dodgeCtx = dodgeCanvas.getContext("2d");
@@ -426,7 +519,6 @@
     if (flappyPlaying) {
       catfish.vy = catfish.jump;
       playSound('swim');
-      // 헤엄칠 때 물방울 생성
       for (let i = 0; i < 4; i++) {
         bubbles.push({
           x: catfish.x - 20,
@@ -446,7 +538,6 @@
     catfish.y += catfish.vy;
     catfish.swimPhase += 0.25;
 
-    // 파이프(수중 암초) 생성
     if (currentTime - lastPipeSpawn > 1650) {
       const gap = 165, topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 120)) + 60;
       pipes.push({ x: flappyCanvas.width + 10, width: 64, topHeight: topH, bottomY: topH + gap, passed: false });
@@ -455,7 +546,6 @@
 
     flappyCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
 
-    // 물방울 파티클
     for (let i = bubbles.length - 1; i >= 0; i--) {
       let b = bubbles[i];
       b.x += b.vx; b.y += b.vy; b.life -= 0.03;
@@ -466,12 +556,10 @@
       flappyCtx.fill();
     }
 
-    // 수중 암초 기둥 (안옼케이)
     for (let i = pipes.length - 1; i >= 0; i--) {
       const p = pipes[i]; p.x -= 2.6;
       if (p.x + p.width < 0) { pipes.splice(i, 1); continue; }
 
-      // 위아래 기둥 렌더링
       flappyCtx.fillStyle = '#1c2d27';
       flappyCtx.strokeStyle = '#34d399';
       flappyCtx.lineWidth = 2;
@@ -489,7 +577,6 @@
         p.passed = true; score3++; document.getElementById("score3").innerText = score3; playSound('win');
       }
 
-      // 충돌 판정
       if ((catfish.x + catfish.radius - 4 > p.x && catfish.x - catfish.radius + 4 < p.x + p.width) &&
           (catfish.y - catfish.radius + 4 < p.topHeight || catfish.y + catfish.radius - 4 > p.bottomY)) {
         flappyPlaying = false; playSound('lose'); if (score3 > bestScore3) bestScore3 = score3;
@@ -502,15 +589,12 @@
       document.getElementById("finalScore3").innerText = score3; document.getElementById("flappyEndScreen").classList.remove("hidden"); return;
     }
 
-    // 옥메기 캐릭터 렌더링 (친구 사진 머리 + 메기 몸통 & 수염 & 꼬리)
     flappyCtx.save();
     flappyCtx.translate(catfish.x, catfish.y);
     const angle = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, catfish.vy * 0.08));
     flappyCtx.rotate(angle);
-
     const tailWiggle = Math.sin(catfish.swimPhase) * 9;
 
-    // 1. 메기 꼬리지느러미 (물결침)
     flappyCtx.fillStyle = '#2f5233';
     flappyCtx.beginPath();
     flappyCtx.moveTo(-20, 0);
@@ -520,7 +604,6 @@
     flappyCtx.closePath();
     flappyCtx.fill();
 
-    // 2. 메기 등지느러미
     flappyCtx.fillStyle = '#416d47';
     flappyCtx.beginPath();
     flappyCtx.moveTo(-10, -22);
@@ -529,7 +612,6 @@
     flappyCtx.closePath();
     flappyCtx.fill();
 
-    // 3. 메기 머리 (친구의 오케이 얼굴 사진)
     flappyCtx.beginPath();
     flappyCtx.arc(0, 0, catfish.radius, 0, Math.PI * 2);
     flappyCtx.fillStyle = '#ffd84c';
@@ -542,17 +624,14 @@
     }
     flappyCtx.restore();
 
-    // 4. 메기 긴 수염 (회전 바깥에서 그리기)
     flappyCtx.save();
     flappyCtx.translate(catfish.x, catfish.y);
     flappyCtx.rotate(angle);
     flappyCtx.strokeStyle = '#1e3822';
     flappyCtx.lineWidth = 2.5;
     flappyCtx.beginPath();
-    // 윗수염
     flappyCtx.moveTo(14, -6);
     flappyCtx.quadraticCurveTo(28, -16 + tailWiggle * 0.3, 38, -8);
-    // 아랫수염
     flappyCtx.moveTo(14, 8);
     flappyCtx.quadraticCurveTo(28, 18 + tailWiggle * 0.3, 38, 12);
     flappyCtx.stroke();
